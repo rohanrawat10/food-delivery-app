@@ -23,8 +23,10 @@ if (image) updateData.image = image;
 
 shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
         }
-        await shop.populate("owner")
-        await shop.populate("items")
+        await shop.populate("owner").populate({
+                path:"items",
+                option:{sort:{updatedAt:-1}}
+            })
         return res.status(201).json(shop)
     }catch(err){
         console.error("CREATE / EDIT SHOP ERROR:", err); 
@@ -34,7 +36,10 @@ shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
 
 export const getMyShop = async (req,res)=>{
     try{
-     const shop = await Shop.findOne({owner:req.userId}).populate("owner")
+     const shop = await Shop.findOne({owner:req.userId}).populate("owner").populate({
+                path:"items",
+                option:{sort:{updatedAt:-1}}
+            })
      if(!shop){
         return res.status(404).json({ message: "Shop not found" });
      }

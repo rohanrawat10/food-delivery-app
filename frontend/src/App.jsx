@@ -12,6 +12,7 @@ import {ClipLoader} from "react-spinners";
 // import useGetMyShop from "./hooks/useGetMyShop";
 import CreateEditShop from "./components/CreateEditShop";
 import AddItems from "./components/AddItems";
+import EditItems from "./components/EditItems";
 // export const severUrl = "http://localhost:8000";
 export default function App(){
   useGetCurrentUser();
@@ -35,6 +36,7 @@ export default function App(){
    <Route path="/" element={userData?<Home/>:<Navigate to="/signin"/>}/>
    <Route path="/create-edit-shop" element={userData?<CreateEditShop/>:<Navigate to={"/signin"}/>}/>
    <Route path="/add-item" element={userData?<AddItems/>: <Navigate to={"/singin"}/>}/>
+    <Route path="/edit-item/:itemId" element={userData?<EditItems/>: <Navigate to={"/singin"}/>}/>
 </Routes>
     </div>
   )

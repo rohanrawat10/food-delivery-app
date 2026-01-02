@@ -6,6 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import { serverUrl } from "../config";
 import { setMyShopData } from "../redux/ownerSlice";
+import { ClipLoader } from "react-spinners";
 export default function CreateEditShop() {
     const navigate = useNavigate();
     const { myShopData } = useSelector(state => state.owner);
@@ -15,7 +16,8 @@ export default function CreateEditShop() {
     const [state,setState] = useState(myShopData?.state || currentState);
     const [address,setAddress] = useState(myShopData?.address || currentAddress)
     const [frontendImage,setFrontendImage] = useState(null);
-    const [backendImage,setBackendImage] = useState(null)
+    const [backendImage,setBackendImage] = useState(null);
+    const [loading,setLoading] = useState(false);
     const dispatch = useDispatch();
 
        const handleImage = (e)=>{
@@ -27,6 +29,7 @@ export default function CreateEditShop() {
 
        const handleSubmit = async(e)=>{
         e.preventDefault();
+        setLoading(true)
         try{
             const formData = new FormData();
             formData.append("name",name);
@@ -43,10 +46,14 @@ export default function CreateEditShop() {
                    headers: { "Content-Type": "multipart/form-data" },
             })
           dispatch(setMyShopData(result.data))
-          console.log("new owner",result.data)
+        //   console.log("new owner",result.data)
+        setLoading(false)
           navigate("/")
         }catch(err){
                console.log("Create/Edit shop error:",err)
+        }
+        finally{
+            setLoading(false)
         }
        }
           return (
@@ -103,7 +110,11 @@ export default function CreateEditShop() {
                             value={address} onChange={(e)=>setAddress(e.target.value)}
                             />
                         </div>
-                        <button type="submit"   className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">Save</button>
+                        <button type="submit" disabled={loading}  className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
+                            {
+                                loading ? <ClipLoader size={20}/>: "Save"
+                            }
+                            </button>
                     </form>
                 </div>
             </div>

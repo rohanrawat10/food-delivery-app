@@ -12,7 +12,7 @@ export default function OwnerDashboard() {
     useGetMyShop();
     const { myShopData } = useSelector(state => state.owner)
     const navigate = useNavigate();
-    console.log("myshopData item",myShopData?.items)
+    
     
     return (
         <div className="w-full min-h-screen bg-[#fff9f6] flex flex-col items-center">
@@ -91,9 +91,9 @@ export default function OwnerDashboard() {
                   )  }
                   {
   myShopData?.items?.length > 0 && (
-    <div className="flex flex-col items-center gap-4 w-full max-w-3xl">
-      {myShopData?.items?.map((item) => (
-        <OwnerItemCard data={item} key={item._id} />
+    <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 ">
+      {myShopData?.items?.map((item,index) => (
+        <OwnerItemCard data={item} key={index} />
       ))}
     </div>
   )

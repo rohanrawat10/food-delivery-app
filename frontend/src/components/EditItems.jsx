@@ -1,21 +1,22 @@
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineAddBusiness } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverUrl } from "../config";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
-export default function AddItems() {
+export default function EditItems() {
     const navigate = useNavigate();
     const { myShopData } = useSelector(state => state.owner);
-   
+   const {itemId} = useParams();
+    const [currentItem,setCurrentItem] = useState(null)
    const [dishName,setDishName] = useState("");
     const [price,setPrice] = useState(0);
     const [loading,setLoading] = useState(false);
     const [category,setCategory] = useState("");
-    const [foodType,setFoodType] = useState("veg")
+    const [foodType,setFoodType] = useState( "veg");
     const categories = [
          "snacks",
             "main course",
@@ -41,7 +42,7 @@ export default function AddItems() {
        }
        const handleSubmit = async(e)=>{
         e.preventDefault();
-        // setLoading(true)
+        setLoading(true)
         if (!backendImage) {
   alert("Please select a dish image");
   return;
@@ -56,14 +57,14 @@ export default function AddItems() {
             // if(backendImage){
             //  formData.append("image",backendImage)
             // }
-           const result = await axios.post(`${serverUrl}/api/item/add-item`,
+           const result = await axios.post(`${serverUrl}/api/item/edit-item/${itemId}`,
             formData,
             {
                 withCredentials:true,
                    headers: { "Content-Type": "multipart/form-data" },
             })
           dispatch(setMyShopData(result.data))
-          console.log("new dish",result.data)
+        //   console.log("new dish",result.data)
           navigate("/")
           setLoading(false)
         }catch(err){
@@ -73,7 +74,28 @@ export default function AddItems() {
                 setLoading(false)
        }
        }
+          useEffect(()=>{
+            const handleGetItemById = async()=>{
+           try{
+                const result = await axios.get(`${serverUrl}/api/item/get-by-id/${itemId}`,
+                    {withCredentials:true}
+                )
+                setCurrentItem(result.data)
+           }
+           catch(err){
+            console.log(err)
+           }
+            }
+            handleGetItemById();
+          },[itemId])
+          useEffect(()=>{
+            setDishName(currentItem?.name || "");
+             setPrice(currentItem?.price || 0);
+             setCategory(currentItem?.category || "");
+             setFoodType(currentItem?.foodType || "veg");
+             setFrontendImage(currentItem?.image || "")
 
+          },[currentItem])
           return (
         <div className="flex justify-center flex-col items-center p-6 bg-linear-to-br from-orange-50 relative to-white  min-h-screen">
             <div className="absolute top-[20px] left-[20px] z-[10] mb-[10]">
@@ -99,7 +121,7 @@ export default function AddItems() {
   )}
                     </div>
                     <div className="text-xl font-bold text-gray-900">
-                        {myShopData ?"Add Dish":"Edit Dish"}
+                        Edit Dish
                     </div>
                     <form className="space-y-5 w-full " onSubmit={handleSubmit}>
                         <div>
@@ -140,11 +162,9 @@ export default function AddItems() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         </div>
-                        <button type="submit" disabled={loading}  className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
-                          {
-                            loading?<ClipLoader size={20}/>:"Save"
-                          }
-                          </button>
+                        <button type="submit"   disabled={loading} className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
+                            {loading?<ClipLoader/>:"Save"}
+                            </button>
                     </form>
                 </div>
             </div>
