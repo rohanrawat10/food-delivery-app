@@ -108,10 +108,20 @@ npm run dev
 npm run dev
 
 ```
-### 🛣️ API Highlights
+## 🛣️ API Highlights
 - /api/auth/signup
 - /api/auth/signin
 - /api/user/current
 - /api/shop/create
 - /api/item/add
 - /api/order/create
+
+## 📌 Future Enhancements
+- Online payment integration
+- Real-time order tracking
+- Push notifications
+- Admin analytics dashboard
+
+## 🤝 Contributing
+Contributions are welcome!
+Feel free to fork the repo and submit a pull request.
