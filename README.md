@@ -125,3 +125,9 @@ npm run dev
 ## 🤝 Contributing
 Contributions are welcome!
 Feel free to fork the repo and submit a pull request.
+
+### 👤 Author
+```bash
+**Rohan Rawat**  
+MERN Developer • Learner  
+GitHub: @rohanrawat10
