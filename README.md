@@ -75,8 +75,7 @@ server/
 └── utils/
 
 
----
-
+```
 ## ⚙️ Installation & Setup
 
 ### 1️⃣ Clone the repository
@@ -121,6 +120,7 @@ npm run dev
 - Real-time order tracking
 - Push notifications
 - Admin analytics dashboard
+  
 
 ## 👤 Author
 ```bash
