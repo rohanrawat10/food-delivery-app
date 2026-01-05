@@ -122,12 +122,12 @@ npm run dev
 - Push notifications
 - Admin analytics dashboard
 
-### 👤 Author
+## 👤 Author
 ```bash
 **Rohan Rawat**  
 MERN Developer • Learner  
 GitHub: @rohanrawat10
-
+```
 ## 🤝 Contributing
 Contributions are welcome!
 Feel free to fork the repo and submit a pull request.
