@@ -41,7 +41,7 @@ export default function AddItems() {
        }
        const handleSubmit = async(e)=>{
         e.preventDefault();
-        // setLoading(true)
+        setLoading(true)
         if (!backendImage) {
   alert("Please select a dish image");
   return;

@@ -23,10 +23,16 @@ if (image) updateData.image = image;
 
 shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
         }
-        await shop.populate("owner").populate({
-                path:"items",
-                option:{sort:{updatedAt:-1}}
-            })
+       
+        await shop.populate([
+  {
+    path: "items",
+    options: { sort: { updatedAt: -1 } }
+  },
+  {
+    path: "owner"
+  }
+]);
         return res.status(201).json(shop)
     }catch(err){
         console.error("CREATE / EDIT SHOP ERROR:", err); 
@@ -36,10 +42,15 @@ shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
 
 export const getMyShop = async (req,res)=>{
     try{
-     const shop = await Shop.findOne({owner:req.userId}).populate("owner").populate({
-                path:"items",
-                option:{sort:{updatedAt:-1}}
-            })
+     const shop = await Shop.findOne({owner:req.userId}).populate([
+  {
+    path: "items",
+    options: { sort: { updatedAt: -1 } }
+  },
+  {
+    path: "owner"
+  }
+])
      if(!shop){
         return res.status(404).json({ message: "Shop not found" });
      }
@@ -48,4 +59,15 @@ export const getMyShop = async (req,res)=>{
     catch(err){
         return res.status(500).json({message:`Get My Shop error${err}`})
     }
+}
+
+export const getShopByCity = async(req,res)=>{
+  try{
+    const {city} = req.params
+   const shops = await Shop.find({
+
+   })
+  }catch(error){
+    
+  }
 }

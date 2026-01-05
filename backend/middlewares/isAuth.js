@@ -9,6 +9,7 @@ const isAuth = (req, res, next) => {
     }
 
     let decodedToken;
+    console.log("cookeis received:",req.cookies)
     try {
       decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {

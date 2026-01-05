@@ -18,7 +18,6 @@ export default function App(){
   useGetCurrentUser();
   useGetCity()
   // useGetMyShop()
-  useGet
   const {userData,authChecked} = useSelector(state=>state.user)
 
   if(!authChecked){
@@ -30,14 +29,16 @@ export default function App(){
      
       {/* <Nav/> */}
 <Routes>
-  <Route path="/signup" element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>
-  <Route path="/signin" element={!userData?<SignIn/>:<Navigate to="/"/>}/>
-  <Route path="/signin/forgot-password" element={!userData?<ForgotPassword/>:<Navigate to={"/"}/>}/>
-   <Route path="/" element={userData?<Home/>:<Navigate to="/signin"/>}/>
-   <Route path="/create-edit-shop" element={userData?<CreateEditShop/>:<Navigate to={"/signin"}/>}/>
-   <Route path="/add-item" element={userData?<AddItems/>: <Navigate to={"/singin"}/>}/>
-    <Route path="/edit-item/:itemId" element={userData?<EditItems/>: <Navigate to={"/singin"}/>}/>
+  <Route path="/signup" element={!userData ? <SignUp/> : <Navigate to="/" />} />
+  <Route path="/signin" element={!userData ? <SignIn/> : <Navigate to="/" />} />
+  <Route path="/signin/forgot-password" element={!userData ? <ForgotPassword/> : <Navigate to="/" />} />
+
+  <Route path="/" element={userData ? <Home/> : <Navigate to="/signin" />} />
+  <Route path="/create-edit-shop" element={userData ? <CreateEditShop/> : <Navigate to="/signin" />} />
+  <Route path="/add-item" element={userData ? <AddItems/> : <Navigate to="/signin" />} />
+  <Route path="/edit-item/:itemId" element={userData ? <EditItems/> : <Navigate to="/signin" />} />
 </Routes>
+
     </div>
   )
 }

@@ -76,13 +76,16 @@ export default function EditItems() {
        }
           useEffect(()=>{
             const handleGetItemById = async()=>{
+          
            try{
                 const result = await axios.get(`${serverUrl}/api/item/get-by-id/${itemId}`,
                     {withCredentials:true}
                 )
                 setCurrentItem(result.data)
+               
            }
            catch(err){
+           
             console.log(err)
            }
             }
@@ -94,7 +97,7 @@ export default function EditItems() {
              setCategory(currentItem?.category || "");
              setFoodType(currentItem?.foodType || "veg");
              setFrontendImage(currentItem?.image || "")
-
+                
           },[currentItem])
           return (
         <div className="flex justify-center flex-col items-center p-6 bg-linear-to-br from-orange-50 relative to-white  min-h-screen">
@@ -163,7 +166,7 @@ export default function EditItems() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         </div>
                         <button type="submit"   disabled={loading} className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer">
-                            {loading?<ClipLoader/>:"Save"}
+                            {loading?<ClipLoader size={20}/>:"Save"}
                             </button>
                     </form>
                 </div>

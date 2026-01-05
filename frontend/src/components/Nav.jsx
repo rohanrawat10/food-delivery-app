@@ -62,7 +62,7 @@ export default function Nav() {
             userData?.role == "user" && 
             (
              <div className="w-full h-[80px] flex items-center justify-between px-[20px] 
-             top-0 z-[9999] bg-[#fff9f6] relative">
+            fixed top-0 left-0 z-[9999] bg-[#fff9f6] ">
 
             {/* Logo */}
             <h1 className="text-3xl md:2xl font-bold text-[#ff4d2d]">HungerStrike</h1>
