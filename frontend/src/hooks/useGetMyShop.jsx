@@ -22,7 +22,7 @@ console.log("Fetched shop:", result.data);
             }
         }
         fetchShop()
-    }, [])
+    }, [dispatch])
 }
 
 export default useGetMyShop

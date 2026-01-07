@@ -13,10 +13,14 @@ import {ClipLoader} from "react-spinners";
 import CreateEditShop from "./components/CreateEditShop";
 import AddItems from "./components/AddItems";
 import EditItems from "./components/EditItems";
+import useGetShopsByCity from "./hooks/useGetShopsByCity";
+import useGetMyShop from "./hooks/useGetMyShop";
 // export const severUrl = "http://localhost:8000";
 export default function App(){
   useGetCurrentUser();
   useGetCity()
+  useGetShopsByCity()
+  useGetMyShop()
   // useGetMyShop()
   const {userData,authChecked} = useSelector(state=>state.user)
 

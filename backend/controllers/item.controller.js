@@ -109,3 +109,15 @@ export const deleteItem = async(req,res)=>{
     catch(err){
      return res.status(500).json({message:`delete item error`})
     }}
+
+    export const getItByCity = async(req,res)=>{
+        try{
+             const {city} = req.params
+             if(!city){
+                return res.status(400).json({message:"City is required"})
+             }
+        }
+        catch(err){
+
+        }
+    }

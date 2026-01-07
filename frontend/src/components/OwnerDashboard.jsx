@@ -9,7 +9,7 @@ import { TiEdit } from "react-icons/ti";
 import { IoRestaurant } from "react-icons/io5";
 import OwnerItemCard from "./OwnerItemCard";
 export default function OwnerDashboard() {
-    useGetMyShop();
+    // useGetMyShop();
     const { myShopData } = useSelector(state => state.owner)
     const navigate = useNavigate();
     
