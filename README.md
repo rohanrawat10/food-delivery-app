@@ -75,8 +75,7 @@ server/
 └── utils/
 
 
----
-
+```
 ## ⚙️ Installation & Setup
 
 ### 1️⃣ Clone the repository
@@ -121,13 +120,16 @@ npm run dev
 - Real-time order tracking
 - Push notifications
 - Admin analytics dashboard
+  
 
-## 🤝 Contributing
-Contributions are welcome!
-Feel free to fork the repo and submit a pull request.
-
-### 👤 Author
+## 👤 Author
 ```bash
 **Rohan Rawat**  
 MERN Developer • Learner  
 GitHub: @rohanrawat10
+```
+## 🤝 Contributing
+Contributions are welcome!
+Feel free to fork the repo and submit a pull request.
+
+
