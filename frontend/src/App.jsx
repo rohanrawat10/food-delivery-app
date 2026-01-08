@@ -15,12 +15,14 @@ import AddItems from "./components/AddItems";
 import EditItems from "./components/EditItems";
 import useGetShopsByCity from "./hooks/useGetShopsByCity";
 import useGetMyShop from "./hooks/useGetMyShop";
+import useGetItemsByCity from "./hooks/useGetItemsByCity";
 // export const severUrl = "http://localhost:8000";
 export default function App(){
   useGetCurrentUser();
   useGetCity()
+useGetMyShop()
   useGetShopsByCity()
-  useGetMyShop()
+  useGetItemsByCity()
   // useGetMyShop()
   const {userData,authChecked} = useSelector(state=>state.user)
 

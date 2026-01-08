@@ -9,6 +9,7 @@ const userSlice = createSlice({
         currentAddress:null,
         authChecked:false,
      shopsInCity:[],
+     itemsInCity:[],
     },
     reducers:{
         setUserData:(state,action)=>{
@@ -25,12 +26,16 @@ const userSlice = createSlice({
             state.currentAddress = action.payload
         } ,
         setAuthChecked:(state)=>{
-            state.authChecked = true;
+            state.authChecked = true
         },
         setShopsInCity:(state,action)=>{
             state.shopsInCity = action.payload
+        },
+        setItemsInCity:(state,action)=>{
+            state.itemsInCity = action.payload
         }
+
     },
 })
-export const {setUserData,setCurrentCity,setAuthChecked,setCurrentState,setCurrentAddress,setShopsInCity} = userSlice.actions
+export const {setUserData,setCurrentCity,setAuthChecked,setCurrentState,setCurrentAddress,setShopsInCity,setItemsInCity} = userSlice.actions
 export default userSlice.reducer

@@ -32,7 +32,7 @@ const handleDeleteItem =async(itemId)=>{
                  
     >
       {/* menu */}
-      < button className="absolute top-1 text-gray-700 right-1  from-gray-100 to-gray-200
+      < button className="absolute top-1 text-gray-700 right-1  
                    backdrop-blur-md p-2 rounded-full
                    hover:bg-orange-100 z-10"
                    onClick={()=>setPopup(!popup)}
@@ -70,11 +70,11 @@ const handleDeleteItem =async(itemId)=>{
       
 
       {/* IMAGE */}
-      <div className="h-44 flex items-center justify-center p-4">
+      <div className="h-40 flex items-center  p-4">
         <img
           src={data.image}
           alt={data.name}
-          className="w-full h-full object-contain drop-shadow-xl transform hover:scale-110 transition-transform duration-300"
+          className="w-full h-full object-cover drop-shadow-xl transform hover:scale-110 transition-transform duration-300"
         />
       </div>
 

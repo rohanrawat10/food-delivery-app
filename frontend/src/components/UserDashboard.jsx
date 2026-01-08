@@ -5,8 +5,10 @@ import Nav from "./Nav";
 import { FaChevronCircleRight } from "react-icons/fa";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { useSelector } from "react-redux";
+import ShopsInCityCard from "./ShopsInCityCard";
+import FoodItemsCard from "./FoodItemsCard";
 export default function UserDashboard(){
-  const {currentCity,shopsInCity } = useSelector(state => state.user);
+  const {currentCity,shopsInCity,itemsInCity } = useSelector(state => state.user);
     const cateScrollRef = useRef();
     const shopScrollRef = useRef();
     const [showLeftButton,setShowLeftButton] = useState(false);
@@ -74,8 +76,9 @@ export default function UserDashboard(){
 // }, [shopsInCity.length]);
 
    console.log("shops in City",shopsInCity)
+   console.log("Items in city",itemsInCity)
     return(
-          <div className="w-screen mih-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-auto">
+          <div className="w-full min-h-screen bg-[#fff9f6] flex flex-col items-center">
           <Nav/>
           <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5 pt-20 lg:pt-7">
             <h1 className="text-gray-800 e text-2xl sm:text-3xl">Insipiration for your first order</h1>
@@ -86,7 +89,7 @@ export default function UserDashboard(){
                     <IoIosArrowDropleftCircle size={18}  />
                   </button>}
                    
-                <div className="w-full flex flex-nowrap overflow-x-auto gap-4 pb-2  "
+                <div className="w-full flex flex-nowrap overflow-x-auto gap-4 pb-2"
                  ref={cateScrollRef}
                 >
                {categories.map((cate,index)=>(
@@ -103,7 +106,7 @@ export default function UserDashboard(){
                {/* } */}
                </div>
           </div>
-          <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5">
+          <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5 pt-5 lg:pt-5">
             <h1 className="text-gray-800 e text-2xl sm:text-3xl">Best in tast in {currentCity}</h1>
               <div className="w-full relative rounded-2xl">
                 {showShopLeftButton &&  <button className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-orange-100 text-gray-600 bg-opacity-10  p-1
@@ -115,8 +118,8 @@ export default function UserDashboard(){
                 <div className="w-full flex flex-nowrap overflow-x-auto gap-4 pb-2  "
                  ref={shopScrollRef}
                 >
-               {shopsInCity?.map((shop,index)=>(
-                  <CategoryCard name={shop.name} image={shop.image} key={index}/>
+               {shopsInCity.map((shop,index)=>(
+                  <ShopsInCityCard name={shop.name} image={shop.image} key={index}/>
                ))}
                </div>
                { showShopRightButton &&
@@ -129,9 +132,33 @@ export default function UserDashboard(){
                {/* } */}
                </div>
           </div>
-          <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5">
-           <h1 className="text-gray-800 e text-2xl sm:text-3xl">Loved by people</h1>
+            <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5 pt-20 lg:pt-7">
+            <h1 className="text-gray-800 e text-2xl sm:text-3xl">Insipiration for your first order</h1>
+               <div className="w-full relative rounded-2xl">
+                {showLeftButton &&  <button className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-orange-100 text-gray-600 bg-opacity-10  p-1
+                         hover:shadow-lg active:scale-110 transition-all duration-300  z-10 
+                    " onClick={()=>scrollHandler(cateScrollRef,"left")}>
+                    <IoIosArrowDropleftCircle size={18}  />
+                  </button>}
+                   
+                <div className="w-full flex flex-nowrap overflow-x-auto gap-4 pb-2"
+                 ref={cateScrollRef}
+                >
+               {categories.map((item,index)=>(
+                  <FoodItemsCard data={item} key={index}/>
+               ))}
+               </div>
+               { showRightButton &&
+                 <button className="hidden md:flex  absolute right-0 top-1/2 -translate-y-1/2 bg- bg-orange-100 text-gray-600 bg-opacity-10 p-1
+                         hover:shadow-lg active:scale-110 transition-all duration-300  z-10" onClick={()=>scrollHandler(cateScrollRef,"right")}>
+                  <FaChevronCircleRight size={18} />
+               </button>
+               }
+              
+               {/* } */}
+               </div>
           </div>
+         
         </div>
     )
 }
