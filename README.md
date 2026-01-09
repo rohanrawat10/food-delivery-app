@@ -85,17 +85,17 @@ git clone https://github.com/your-username/your-repo-name.git
 ```
 ### 2️⃣ Install dependencies
 ```bash
- cd client
+ cd frontend
  npm install
 
-cd ../server
+cd ../backend
 npm install
 ```
 ### 3️⃣ Environment Variables (server/.env)
 ```bash
 PORT=8000
-MONGO_URI=your_mongodb_url
-JWT_SECRET=your_jwt_secret
+MONGODB_URL="mongodb+srv://rohanrawat792004_db_user:CylQWjePmav58Gvi@cluster0.ykdds0z.mongodb.net/hungerstrike"
+JWT_SECRET="HIIDSOSLNNPSPPSP"
 
 ```
 ### 4️⃣ Run the app
