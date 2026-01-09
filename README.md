@@ -94,8 +94,8 @@ npm install
 ### 3️⃣ Environment Variables (server/.env)
 ```bash
 PORT=8000
-MONGO_URI=your_mongodb_url
-JWT_SECRET=your_jwt_secret
+MONGODB_URL="mongodb+srv://rohanrawat792004_db_user:CylQWjePmav58Gvi@cluster0.ykdds0z.mongodb.net/hungerstrike"
+JWT_SECRET="HIIDSOSLNNPSPPSP"
 
 ```
 ### 4️⃣ Run the app
