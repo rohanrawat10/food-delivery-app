@@ -85,10 +85,10 @@ git clone https://github.com/your-username/your-repo-name.git
 ```
 ### 2️⃣ Install dependencies
 ```bash
- cd client
+ cd frontend
  npm install
 
-cd ../server
+cd ../backend
 npm install
 ```
 ### 3️⃣ Environment Variables (server/.env)
