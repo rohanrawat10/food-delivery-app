@@ -16,6 +16,8 @@ import EditItems from "./components/EditItems";
 import useGetShopsByCity from "./hooks/useGetShopsByCity";
 import useGetMyShop from "./hooks/useGetMyShop";
 import useGetItemsByCity from "./hooks/useGetItemsByCity";
+import CartPage from "./components/CartPage";
+import Checkout from "./components/Checkout";
 // export const severUrl = "http://localhost:8000";
 export default function App(){
   useGetCurrentUser();
@@ -43,6 +45,8 @@ useGetMyShop()
   <Route path="/create-edit-shop" element={userData ? <CreateEditShop/> : <Navigate to="/signin" />} />
   <Route path="/add-item" element={userData ? <AddItems/> : <Navigate to="/signin" />} />
   <Route path="/edit-item/:itemId" element={userData ? <EditItems/> : <Navigate to="/signin" />} />
+  <Route path="/cart" element={userData?<CartPage/>:<Navigate to="signin"/>}/>
+   <Route path="/checkout" element={userData?<Checkout/>:<Navigate to="signin"/>}/>
 </Routes>
 
     </div>

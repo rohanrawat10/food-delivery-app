@@ -14,7 +14,7 @@ import { IoReceiptSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 export default function Nav() {
   const navigate = useNavigate();
-    const { userData,currentCity } = useSelector(state => state.user);
+    const { userData,currentCity,cartItems } = useSelector(state => state.user);
     const {myShopData } = useSelector(state => state.owner);
     const [popUp, setPopup] = useState(false);
     const dispatch = useDispatch()
@@ -146,9 +146,9 @@ export default function Nav() {
 
                 {/* Cart */}
                 <div className="relative cursor-pointer">
-                    <BsCart4 size={26} className="text-[#ff4d2d]" />
+                    <BsCart4 size={26} className="text-[#ff4d2d]" onClick={()=>navigate("/cart")}/>
                     <span className="absolute right-[-8px] top-[-10px] text-sm text-[#ff4d2d]">
-                        0
+                        {cartItems.length}
                     </span>
                 </div>
 
