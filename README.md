@@ -57,7 +57,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - Secure login, signup & logout
 - OTP-based password reset
 - Google authentication support
-
+  
 ---
 
 ## 📁 Project Structure
