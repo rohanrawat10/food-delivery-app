@@ -52,17 +52,18 @@
 
 import axios from "axios";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentAddress,
   setCurrentCity,
   setCurrentState,
 } from "../redux/userSlice";
+import { setAddress, setLocation } from "../redux/mapSlice";
 
 export default function useGetCity() {
   const dispatch = useDispatch();
   const apiKey = import.meta.env.VITE_GEOAPIKEY;
-
+   const {userData} = useSelector(state=>state.user)
   useEffect(() => {
     if (!navigator.geolocation) {
       console.error("Geolocation not supported");
@@ -73,7 +74,7 @@ export default function useGetCity() {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-
+     dispatch(setLocation({lat:latitude,lon:longitude}))
           const result = await axios.get(
             `https://api.geoapify.com/v1/geocode/reverse`,
             {
@@ -95,8 +96,9 @@ export default function useGetCity() {
           dispatch(
             setCurrentAddress(
               location.address_line2 || location.address_line1 || ""
-            )
-          );
+            ))
+           dispatch(setAddress(location.formatted))
+          console.log("location:",location.formatted)
         } catch (err) {
           console.error("GeoAPI error:", err);
         }
@@ -105,5 +107,5 @@ export default function useGetCity() {
         console.error("Geolocation error:", error.message);
       }
     );
-  }, []); // ✅ run once
+  }, [userData]); // ✅ run once
 }
