@@ -31,7 +31,7 @@ function CartItemsCard({ data }) {
 
                     <h1 className="font-medium text-gray-800">{data.name}</h1>
                     <p className="font-medium text-gray-600">Qty:{data.quantity}</p>
-                    <p className="font-medium text-gray-600">₹{data.price * data.quantity}</p>
+                  
 
                     <div>
 
