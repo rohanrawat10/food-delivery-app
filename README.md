@@ -24,6 +24,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - Place orders
 - View order history
 - Secure authentication
+- Live Food tracking 
 
 ### 🏪 Shop Owner Dashboard
 - Create & edit shop profile
@@ -31,6 +32,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - Manage shop menu
 - View customer orders
 - Role-based access control
+  
 
 ### 🚴 Delivery Partner Dashboard
 - View assigned deliveries
@@ -57,6 +59,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - Secure login, signup & logout
 - OTP-based password reset
 - Google authentication support
+- Live tracking of delivery agent
   
 ---
 
