@@ -29,7 +29,10 @@ useGetMyShop()
   const {userData,authChecked} = useSelector(state=>state.user)
 
   if(!authChecked){
-    return<div className="flex items-center justify-center min-h-screen">{<ClipLoader size={40} color="#000000" loading={true}/>}</div>
+    return<div className="flex items-center justify-center min-h-screen">
+      {<ClipLoader size={40} color="#000000" loading={true}/>}
+      
+      </div>
   }
   // console.log("current user",user)
   return(

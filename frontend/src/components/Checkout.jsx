@@ -92,7 +92,7 @@ function Checkout() {
       <IoArrowBackSharp
         size={30}
         className="fixed top-5 left-5 z-50 text-[#ff4d2d] cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/cart")}
       />
       <div className="w-full max-w-[900px] bg-white rounded-2xl shadow-xl p-6 space-x-6">
         <h1 className="text-2xl font-bold text-gray-800">Checkout</h1>
@@ -176,7 +176,7 @@ function Checkout() {
 
   <hr />
 
-  <div className="flex justify-between items-center">
+  <div className="flex justify-between items-center pt-2">
     <p className="text-lg font-bold">To Pay</p>
     <span className="text-lg font-bold text-[#ff4d2d] text-right">
       ₹{amountWithAllTaxes}
@@ -188,7 +188,7 @@ function Checkout() {
     
         </section>
         <section>
-           <button className="w-full bg-[#ff4d2d] hover:bg-[#d64526] text-white py-3 rounded-xl
+           <button className="w-full bg-[#ff4d2d] hover:bg-[#d64526] text-white py-3 m-2 rounded-xl
         font-semibold">
           {paymentMethod =="cod"?"Place Order":"pay & place Order"}
           </button>
