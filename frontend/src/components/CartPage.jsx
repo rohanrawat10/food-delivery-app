@@ -8,7 +8,7 @@ export default function CartPage(){
     return(
      <div className="min-h-screen bg-[#fff9f6] p-6 relative">
 
-  {/* BACK BUTTON – SCREEN CORNER */}
+ 
   
      <IoArrowBackSharp
     size={30}

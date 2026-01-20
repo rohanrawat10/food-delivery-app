@@ -30,5 +30,5 @@ const shopSchema = new mongoose.Schema({
         ref:"Item"
     }]
 },{timestamps:true})
-const Shop = mongoose.model("shop",shopSchema)
-export default Shop
+const Shop = mongoose.model("Shop",shopSchema)
+export default Shop;

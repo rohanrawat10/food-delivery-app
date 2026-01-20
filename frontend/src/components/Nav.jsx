@@ -154,8 +154,8 @@ export default function Nav() {
 
                 {/* My Orders (Desktop only) */}
                 <button className="hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 
-                    text-[#ff4d2d] text-sm font-medium pointer-cursor
-                ">
+                    text-[#ff4d2d] text-sm font-medium cursor-pointer
+                " onClick={()=>navigate("/my-orders")}>
                     My Orders
                 </button>
 
@@ -175,6 +175,9 @@ export default function Nav() {
             <div className="text-lg font-semibold">
               {userData?.fullName || "Profile"}
             </div>
+            <p className="text-[#ff4d2d]  cursor-pointer font-semibold" onClick={()=>navigate("/my-orders")}>
+              My-orders
+            </p>
             <p className="text-[#ff4d2d] mt-2 cursor-pointer font-semibold" onClick={handleLogOut}>
               Log out
             </p>
@@ -218,7 +221,7 @@ export default function Nav() {
 }
       {/* My Orders */}
       <button className=" hidden md:flex relative px-3 py-1 rounded-lg 
-        bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" >
+        bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" onClick={()=>navigate("/my-orders")} >
         My Orders
            <span className="absolute right-[-8px] top-[-10px] text-sm text-[#ff4d2d]">
           0
