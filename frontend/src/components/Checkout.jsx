@@ -13,6 +13,7 @@ import { MdDeliveryDining } from "react-icons/md";
 import { FaMobileAlt } from "react-icons/fa";
 import { FaRegCreditCard } from "react-icons/fa6";
 import { serverUrl } from "../config";
+import { addMyOrder } from "../redux/userSlice";
 function RecenterMap({ location }) {
   if (location.lat && location.lng) {
     const map = useMap()
@@ -103,8 +104,9 @@ function Checkout() {
  
     },{withCredentials:true})
      navigate("/order-placed")
-    console.log("orders",result.data)
-    navigate("/order-placed")
+     dispatch(addMyOrder(result.data))
+    // console.log("orders",result.data)
+    // navigate("/order-placed")
     }
     catch(err){
       console.log("place order error",err)

@@ -51,6 +51,8 @@ export const placeOrder = async (req, res) => {
             totalAmount,
             shopOrders
         })
+        await newOrder.populate("shopOrders.shopOrderItems.item","name image price")
+        await newOrder.populate("shopOrders.shop","name")
         return res.status(201).json(newOrder)
     }
     catch (err) {
@@ -75,13 +77,13 @@ export const getMyOrders = async (req, res) => {
                 .sort({ createdAt: -1 })
                  .populate("user") // ✅ CUSTOMER
                 .populate("shopOrders.shop", "name")
-                .populate("shopOrders.owner", "name email mobile")
+                // .populate("shopOrders.owner", "name email mobile")
                 .populate("shopOrders.shopOrderItems.item", "name image price")
           const filteredOrders = orders.map((order=>({
                _id:order._id,
                paymentMethod:order.paymentMethod,
                user:order.user,
-               shopOrders:order.shopOrders.map(o=>o.owner._id==req.userId),
+               shopOrders:order.shopOrders.find(o=>o.owner._id==req.userId),
                createdAt:order.createdAt,
                deliveryAddress:order.deliveryAddress
           })))
@@ -90,5 +92,24 @@ export const getMyOrders = async (req, res) => {
     }
     catch (err) {
         return res.status(500).json({ message: `get User order error${err}` })
+    }
+}
+
+export const updateOrderStatus = async(req,res)=>{
+    try{
+      const {orderId,shopId} = req.params
+      const {status} = req.body
+      const order = await Order.findById(orderId)
+      const shopOrder =  order.shopOrders.find(o=>o.shop.toString() == shopId)
+      if(!shopOrder){
+        return res.status(400).json({message:"shop order not found"})
+      }
+      shopOrder.status = status
+      await shopOrder.save()
+    //   await shopOrder.populate("shopOrderItems.item","name image price")
+      return res.status(200).json(shopOrder.status)
+    }
+    catch(err){
+             return res.status(500).json({message:'order status error:',err})
     }
 }
