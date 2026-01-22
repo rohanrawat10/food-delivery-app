@@ -21,6 +21,7 @@ import Checkout from "./components/Checkout";
 import OrderPlaced from "./components/OrderPlaced";
 import MyOrders from "./components/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
+import useUpdateLocation from "./hooks/useUpdateLocation";
 // export const severUrl = "http://localhost:8000";
 export default function App() {
   useGetCurrentUser();
@@ -29,6 +30,7 @@ export default function App() {
   useGetShopsByCity()
   useGetItemsByCity()
   useGetMyOrders()
+  useUpdateLocation()
   // useGetMyShop()
   const { userData, authChecked } = useSelector(state => state.user)
 

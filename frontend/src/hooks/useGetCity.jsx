@@ -86,7 +86,7 @@ export default function useGetCity() {
               },
             }
           );
-
+console.log("Use get by City",result.data)
           const location = result?.data?.results?.[0];
 
           if (!location) return;
@@ -98,7 +98,7 @@ export default function useGetCity() {
               location.address_line2 || location.address_line1 || ""
             ))
            dispatch(setAddress(location.formatted))
-          console.log("location:",location.formatted)
+          // console.log("location:",location.formatted)
         } catch (err) {
           console.error("GeoAPI error:", err);
         }

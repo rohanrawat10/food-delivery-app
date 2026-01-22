@@ -69,8 +69,17 @@ const userSlice = createSlice({
         },
         addMyOrder:(state,action)=>{
         state.MyOrders=[action.payload,...state.MyOrders]
+        },
+        updateOrderStatus:(state,action)=>{
+            const{orderId,shopId,status} = action.payload
+           const order = state.MyOrders.find(o=>o._id == orderId)
+           if(order){
+             if(order.shopOrders && order.shopOrders.shop._id == shopId){
+            order.shopOrders.status = status
+           }
+           }
         }
     },
 })
-export const { setUserData, setCurrentCity, setAuthChecked, setCurrentState, setCurrentAddress, setShopsInCity, setItemsInCity, setAddToCart, setUpdateQuantity, setRemoveCartItem ,setMyOrders,addMyOrder} = userSlice.actions
+export const { setUserData, setCurrentCity, setAuthChecked, setCurrentState, setCurrentAddress, setShopsInCity, setItemsInCity, setAddToCart, setUpdateQuantity, setRemoveCartItem ,setMyOrders,addMyOrder,updateOrderStatus} = userSlice.actions
 export default userSlice.reducer
