@@ -2,7 +2,6 @@ import axios from "axios"
 import { FaPhoneAlt } from "react-icons/fa"
 import { PiShoppingBagDuotone } from "react-icons/pi"
 import { serverUrl } from "../config"
-<<<<<<< HEAD
 import { useDispatch } from "react-redux"
 import { updateOrderStatus } from "../redux/userSlice"
 import { useState } from "react"
@@ -21,24 +20,14 @@ function OwnerOrderCard({ data }) {
         try{
          const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`,{status},{withCredentials:true})
           dispatch(updateOrderStatus({orderId,shopId,status}))
-           setAvailableBoys(result.data.availableBoys)
-          console.log(result.data)
+           setAvailableBoys(result.data. availableDeliveryBoys)
+          console.log("handle Update status data:",result.data)
         
         
     }
-=======
-function OwnerOrderCard({ data }) {
-    // console.log(Array.isArray(data.shopOrders)) // should be true
-    console.log("order data", data)
-    console.log("shop orders", data?.shopOrders)
-    const handleUpdateStatus = async(orderId,shopId,status)=>{
-        try{
-         const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`,{status},{withCredentials:true})
-        console.log(result.data)
-        }
->>>>>>> 32ce3cd2722650ff6d72616f52b7902d000cf239
         catch(err){
               console.log("handle update status",err)
+              console.log("handler update err",err.response?.data)
         }
     }
     return (
@@ -79,20 +68,30 @@ function OwnerOrderCard({ data }) {
             </div>
             <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
              <span className="text-sm font-semibold"> Status: <span className="font-semibold capitalize text-[#ff4d2d]">{data.shopOrders.status}</span></span>  
-<<<<<<< HEAD
             <select value={data.status} onChange={(e)=>handleUpdateStatus(data._id,data.shopOrders.shop._id,e.target.value)} className="rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-amber-600">
             {/* <option>Change</option> */}
             <option value="pending">Pending</option>
             <option value="preparing">Preparing</option>
-            <option value="out_for_delivery">Out for delivery</option>
-=======
-            <select onChange={(e)=>handleUpdateStatus(data.id,data.shopOrders.shop._id,e.target.value)} className="rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-amber-600">
-            <option value="pending">Pending</option>
-            <option value="preparing">Preparing</option>
-            <option value="out for delivery">Out for delivery</option>
->>>>>>> 32ce3cd2722650ff6d72616f52b7902d000cf239
+            <option value="out of delivery">Out of delivery</option>
             </select>
             </div>
+            {
+                data.shopOrders?.status == "out of delivery"&&
+                <div className="mt-13 p-2 border rounded-lg text-sm bg-orange-50">
+                    <p> Available Delivery Boys:</p>
+               {
+                availableBoys?.length >0?(
+                                   availableBoys.map((value,index)=>(
+                                    <div key={index} className="text-gray-300">{value.fullName}-{value.mobile}</div>
+
+  
+                                   ))
+                ):<div>
+                    Waiting for delivery boy to accept
+                    </div>
+               }
+                    </div>
+            }
             <div className="text-right font-bold text-gray-800 text-sm">
                Total: ₹{data.shopOrders.subTotal}
                 </div>

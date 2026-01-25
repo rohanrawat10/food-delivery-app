@@ -263,6 +263,58 @@ export default function Nav() {
   </div>
 )}
 
+
+{/* //delivery boy */}
+{
+   userData?.role == "deliveryBoy" &&(
+    <div className="w-full h-[80px] flex items-center justify-between px-[20px]  
+    fixed top-0 z-[9999] bg-[#fff9f6]">
+ <h1 
+    className="text-3xl md:2xl font-bold text-[#ff4d2d]">
+      HungerStrike
+      </h1>
+       <div className="flex items-center gap-5">
+     {/* My Orders */}
+      <button className=" hidden sm:flex relative px-3 py-1 rounded-lg 
+        bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" onClick={()=>navigate("/my-orders")} >
+        My Orders
+           <span className="absolute right-[-8px] top-[-10px] text-sm text-[#ff4d2d]">
+          0
+        </span>
+      </button>
+      {/* small screen */}
+    <button className="flex md:hidden   text-[#ff4d2d] rounded-lg cursor-pointer"  onClick={()=>navigate("/my-orders")}>
+         <IoReceiptSharp size={26}/>
+    </button>
+       <div
+        className="w-[40px] h-[40px] rounded-full bg-[#ff4d2d] text-white
+        flex items-center justify-center cursor-pointer"
+        onClick={() => setPopup(!popUp)}
+      >
+        {userData?.fullName
+        ? userData.fullName[0].toUpperCase()
+        :
+        <CgProfile size={22} />
+        }
+      </div>
+       {popUp && (
+        <div className="absolute top-[75px] right-6 w-[180px] bg-white 
+          shadow-xl rounded-xl p-4">
+          <div className="text-lg font-semibold">
+            {userData?.fullName || "Profile"}
+          </div>
+          <p
+            className="text-[#ff4d2d] mt-2 cursor-pointer font-semibold"
+            onClick={handleLogOut}
+          >
+            Log out
+          </p>
+        </div>
+      )}
+      </div>
+    </div>
+   )
+}
           
         
         </>

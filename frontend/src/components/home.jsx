@@ -14,7 +14,7 @@ export default function Home(){
   userData?.role == "user" && <UserDashboard/>
  }
  {userData?.role == "admin" && <OwnerDashboard/>}
- {userData?.role == "deliverBoy" && <DeliveryBoy/>}
+ {userData?.role == "deliveryBoy" && <DeliveryBoy/>}
         </div>
     )
 }
