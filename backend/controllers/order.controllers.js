@@ -8,13 +8,21 @@ export const placeOrder = async (req, res) => {
         if (!cartItems || cartItems.length === 0) {
             return res.status(400).json({ message: "cart is empty" })
         }
-        if (
-            !deliveryAddress?.text ||
-            deliveryAddress.latitude === undefined ||
-            deliveryAddress.longitude === undefined
-        ) {
-            return res.status(400).json({ message: "Address is required" })
-        }
+       const lat = Number(deliveryAddress?.latitude)
+const lng = Number(deliveryAddress?.longitude)
+
+if (
+  !deliveryAddress?.text ||
+  isNaN(lat) ||
+  isNaN(lng)
+) {
+  return res.status(400).json({ message: "Valid delivery address with coordinates is required" })
+}
+
+// normalize values (VERY IMPORTANT)
+deliveryAddress.latitude = lat
+deliveryAddress.longitude = lng
+
         const groupItemsByShop = {}
         cartItems.forEach(item => {
             const shopId = item.shop
@@ -107,21 +115,37 @@ export const updateOrderStatus = async(req,res)=>{
       shopOrder.status = status
       let deliveryBoysPayload = [];
       if(status == "out of delivery" || !shopOrder.assignment){
-           const {longitude,latitude} = order.deliveryAddress
-         const nearByDeliveryBoys = await  User.find({
-            role:"deliveryBoy",
-            location:{
-                $near:{
-                    $geometry:{type:"Point",
-                        coordinates:[
-                             Number(longitude),
-                            Number(latitude),
-                        ]
-                    },
-                    $maxDistance:5000
-                }
-            }
-         })   
+        //    const {longitude,latitude} = order.deliveryAddress
+        const latitude = Number(lat)
+const longitude = Number(lng)
+
+        //  const nearByDeliveryBoys = await  User.find({
+        //     role:"deliveryBoy",
+        //     location:{
+        //         $near:{
+        //             $geometry:{type:"Point",
+        //                 coordinates:[
+        //                      Number(longitude),
+        //                     Number(latitude),
+        //                 ]
+        //             },
+        //             $maxDistance:5000
+        //         }
+        //     }
+        //  })   
+        const nearByDeliveryBoys = await User.find({
+  role: "deliveryBoy",
+  location: {
+    $near: {
+      $geometry: {
+        type: "Point",
+        coordinates: [longitude, latitude] // lng first, lat second
+      },
+      $maxDistance: 5000
+    }
+  }
+})
+
          const nearByIds = nearByDeliveryBoys.map(b=>b._id)
          const busyIds = await DeliveryAssignment.find({
             assignedTo:{$in:nearByIds},
