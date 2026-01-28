@@ -86,7 +86,7 @@ export default function useGetCity() {
               },
             }
           );
-console.log("Use get by City",result.data)
+// console.log("Use get by City",result.data)
           const location = result?.data?.results?.[0];
 
           if (!location) return;

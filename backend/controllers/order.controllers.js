@@ -112,39 +112,39 @@ export const updateOrderStatus = async(req,res)=>{
       if(!shopOrder){
         return res.status(400).json({message:"shop order not found"})
       }
-      shopOrder.status = status
+      shopOrder.status  = status
       let deliveryBoysPayload = [];
-      if(status == "out of delivery" || !shopOrder.assignment){
-        //    const {longitude,latitude} = order.deliveryAddress
-        const latitude = Number(lat)
-const longitude = Number(lng)
+      if(status == "out of delivery" && !shopOrder.assignment){
+           const {longitude,latitude} = order.deliveryAddress
+//         const latitude = Number(lat)
+// const longitude = Number(lng)
 
-        //  const nearByDeliveryBoys = await  User.find({
-        //     role:"deliveryBoy",
-        //     location:{
-        //         $near:{
-        //             $geometry:{type:"Point",
-        //                 coordinates:[
-        //                      Number(longitude),
-        //                     Number(latitude),
-        //                 ]
-        //             },
-        //             $maxDistance:5000
-        //         }
-        //     }
-        //  })   
-        const nearByDeliveryBoys = await User.find({
-  role: "deliveryBoy",
-  location: {
-    $near: {
-      $geometry: {
-        type: "Point",
-        coordinates: [longitude, latitude] // lng first, lat second
-      },
-      $maxDistance: 5000
-    }
-  }
-})
+         const nearByDeliveryBoys = await  User.find({
+            role:"deliveryBoy",
+            location:{
+                $near:{
+                    $geometry:{type:"Point",
+                        coordinates:[
+                             Number(longitude),
+                            Number(latitude),
+                        ]
+                    },
+                    $maxDistance:5000
+                }
+            }
+         })   
+//         const nearByDeliveryBoys = await User.find({
+//   role: "deliveryBoy",
+//   location: {
+//     $near: {
+//       $geometry: {
+//         type: "Point",
+//         coordinates: [longitude, latitude] // lng first, lat second
+//       },
+//       $maxDistance: 5000
+//     }
+//   }
+// })
 
          const nearByIds = nearByDeliveryBoys.map(b=>b._id)
          const busyIds = await DeliveryAssignment.find({
@@ -200,26 +200,47 @@ const longitude = Number(lng)
     }
 }
 
-export const getDeliveryAssignment = async(req,res)=>{
-     try{
+export const getDeliveryBoysAssignment = async(req,res)=>{
+     console.log("userId",req.userId) 
+    try{
           const deliveryBoyId = req.userId
-          const assignment = await DeliveryAssignment.find({
+          const assignments = await DeliveryAssignment.find({
+               status:"broadcasted",
+            //    assignedTo:null,
             broadcastedTo:deliveryBoyId,
-            status:"braodcasted",
           })
           .populate("order")
           .populate("shop")
-          const formated = assignment.map(a=>({
+          const formatted = assignments.map(a=>({
             assignmentId:a._id,
             orderId:a.order._id,
             shopName:a.shop.name,
             deliveryAddress:a.order.deliveryAddress,
                items:a.order.shopOrders.find(so=>so._id.equals(a.shopOrderId)).shopOrderItems || [],
-              subtotal:a.order.shopOrders.find(so=>so._id.equals(a.shopOrderId)).subtotal
+              subTotal:a.order.shopOrders.find(so=>so._id.equals(a.shopOrderId)).subTotal
           }))
-          return res.status(200).json(formated)
+    //      const formatted = assignments.map(a => {
+    //          if (!a.order || !a.shop) return null;
+    //   const shopOrder = a.order.shopOrders.find(
+    //     so => so._id.toString() === a.shopOrderId.toString()
+    //   )
+
+    //   return {
+    //     assignmentId: a._id,
+    //     orderId: a.order._id,
+    //     shopName: a.shop.name,
+    //     deliveryAddress: a.order.deliveryAddress,
+    //     items: shopOrder?.shopOrderItems || [],
+    //     subTotal: shopOrder?.subTotal || 0
+    //   }
+    // })
+          return res.status(200).json(formatted)
      }
      catch(err){
-          return res.status(500).json({message:`order status error ${error}`})
+        //   return res.status(500).json({message:`get assignment error ${err}`})
+        console.log("get assignment error message:", err.message);
+  console.log("get assignment error response:", err.response);
+  console.log("get assignment error status:", err.response?.status);
+  console.log("get assignment error data:", err.response?.data);
      }
 }

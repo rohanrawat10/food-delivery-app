@@ -283,7 +283,7 @@ export default function Nav() {
         </span>
       </button>
       {/* small screen */}
-    <button className="flex md:hidden   text-[#ff4d2d] rounded-lg cursor-pointer"  onClick={()=>navigate("/my-orders")}>
+    <button className="flex sm:hidden   text-[#ff4d2d] rounded-lg cursor-pointer"  onClick={()=>navigate("/my-orders")}>
          <IoReceiptSharp size={26}/>
     </button>
        <div

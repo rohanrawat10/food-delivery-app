@@ -82,7 +82,7 @@ function OwnerOrderCard({ data }) {
                {
                 availableBoys?.length >0?(
                                    availableBoys.map((value,index)=>(
-                                    <div key={index} className="text-gray-300">{value.fullName}-{value.mobile}</div>
+                                    <div key={index} className="text-gray-800">{value.fullName}-{value.mobile}</div>
 
   
                                    ))

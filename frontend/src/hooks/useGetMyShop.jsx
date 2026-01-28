@@ -15,7 +15,7 @@ function useGetMyShop() {
                     { withCredentials: true })
 
                 dispatch(setMyShopData(result.data))
-console.log("Fetched shop:", result.data);
+// console.log("Fetched shop:", result.data);
             }
             catch (err) {
                 console.log("API ERROR:", err.response?.data || err.message)

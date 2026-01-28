@@ -23,7 +23,7 @@ export default function useGetItemsByCity() {
 
         dispatch(setItemsInCity(result.data));
         // dispatch(setShopsInCity(Array.isArray(result.data) ? result.data : []));
-        console.log("useGetByCity:", result.data);
+        // console.log("useGetByCity:", result.data);
       } catch (err) {
         dispatch(setItemsInCity([]));
         console.error(

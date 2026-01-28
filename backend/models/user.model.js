@@ -48,10 +48,11 @@ location: {
   type: {
     type: String,
     enum: ["Point"],
+    default:"Point",
   },
   coordinates: {
     type: [Number],
-      coordinates:[0,0]
+    default:[0,0]
   }
 },
 

@@ -12,7 +12,7 @@ useEffect(()=>{
      try{
    const result  = await axios.get(`${serverUrl}/api/order/my-orders`,{withCredentials:true})
      dispactch(setMyOrders(result.data))
-     console.log("Use get my orders:",result.data)     
+    //  console.log("Use get my orders:",result.data)     
 }  
      catch(err){
      console.log("get my orders error:",err)
