@@ -5,7 +5,7 @@ import UserOrderCard from "./UserOrderCard";
 import OwnerOrderCard from "./OwnerOrderCard";
 
 function MyOrders() {
-    const { userData, MyOrders } = useSelector(state => state.user)
+    const { userData, myOrders } = useSelector(state => state.user)
     const navigate = useNavigate()
     return (
         <div className="w-full min-h-screen bg-[#fff9f6] flex  justify-center px-4">
@@ -34,7 +34,7 @@ function MyOrders() {
                 </h1>
                 <div className="space-y-6">{
                    <div className="space-y-6">
-  {Array.isArray(MyOrders) && MyOrders.map((items, index) => (
+  {Array.isArray(myOrders) && myOrders.map((items, index) => (
     userData?.role === "user" ? (
       <UserOrderCard data={items} key={index} />
     ) : userData?.role === "admin" ? (

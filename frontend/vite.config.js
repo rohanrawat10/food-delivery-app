@@ -12,4 +12,9 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts: [
+      "alex-granulative-ena.ngrok-free.dev"
+    ]
+  },
 })

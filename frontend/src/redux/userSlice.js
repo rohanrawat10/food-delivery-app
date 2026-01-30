@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import MyOrders from "../components/MyOrders";
 
 const userSlice = createSlice({
     name: "user",
@@ -13,7 +12,7 @@ const userSlice = createSlice({
         itemsInCity: [],
         cartItems: [],
         totalAmount: 0,
-        MyOrders:[],
+        myOrders:[],
     },
     reducers: {
         setUserData: (state, action) => {
@@ -65,17 +64,20 @@ const userSlice = createSlice({
 
         },
         setMyOrders:(state,action)=>{
-         state.MyOrders = action.payload;
+         state.myOrders = action.payload;
         },
         addMyOrder:(state,action)=>{
-        state.MyOrders=[action.payload,...state.MyOrders]
+        state.myOrders=[action.payload,...state.myOrders]
         },
         updateOrderStatus:(state,action)=>{
-            const{orderId,shopId,status} = action.payload
-           const order = state.MyOrders.find(o=>o._id == orderId)
+            const{orderId,shopId,status,availableDeliveryBoys} = action.payload
+           const order = state.myOrders.find(o=>o._id === orderId)
            if(order){
-             if(order.shopOrders && order.shopOrders.shop._id == shopId){
+             if(order?.shopOrders && order?.shopOrders?.shop?._id === shopId){
             order.shopOrders.status = status
+            if(availableDeliveryBoys !==undefined){
+                order.shopOrders.availableDeliveryBoys = availableDeliveryBoys
+            }
            }
            }
         }

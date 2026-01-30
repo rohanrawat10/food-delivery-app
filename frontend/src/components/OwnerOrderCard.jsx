@@ -4,10 +4,12 @@ import { PiShoppingBagDuotone } from "react-icons/pi"
 import { serverUrl } from "../config"
 import { useDispatch } from "react-redux"
 import { updateOrderStatus } from "../redux/userSlice"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 function OwnerOrderCard({ data }) {
+    console.log("data from redux:",data.shopOrders.availableDeliveryBoys)
     const dispatch = useDispatch()
-    const [availableBoys,setAvailableBoys ] = useState([])
+    const availableBoys = data.shopOrders.availableDeliveryBoys || []
+
     // console.log("console",data?.shopOrders?.[0])
     // console.log(data.s)
     // console.log(Array.isArray(data.shopOrders)) // should be true
@@ -19,8 +21,8 @@ function OwnerOrderCard({ data }) {
   console.log("status:", status);
         try{
          const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`,{status},{withCredentials:true})
-          dispatch(updateOrderStatus({orderId,shopId,status}))
-           setAvailableBoys(result.data. availableDeliveryBoys)
+          dispatch(updateOrderStatus({orderId,shopId,status,availableDeliveryBoys:result.data.availableDeliveryBoys}))
+        //    setAvailableBoys(result.data. availableDeliveryBoys)
           console.log("handle Update status data:",result.data)
         
         
@@ -68,30 +70,67 @@ function OwnerOrderCard({ data }) {
             </div>
             <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
              <span className="text-sm font-semibold"> Status: <span className="font-semibold capitalize text-[#ff4d2d]">{data.shopOrders.status}</span></span>  
-            <select value={data.status} onChange={(e)=>handleUpdateStatus(data._id,data.shopOrders.shop._id,e.target.value)} className="rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-amber-600">
+            <select value={data.shopOrders.status} onChange={(e)=>handleUpdateStatus(data._id,data.shopOrders.shop._id,e.target.value)} className="rounded-md border px-3 py-1 text-sm focus:outline-none focus:ring-2 border-amber-600">
             {/* <option>Change</option> */}
             <option value="pending">Pending</option>
             <option value="preparing">Preparing</option>
-            <option value="out of delivery">Out of delivery</option>
+            <option value="out for delivery">Out for delivery</option>
             </select>
             </div>
-            {
-                data.shopOrders?.status == "out of delivery"&&
-                <div className="mt-13 p-2 border rounded-lg text-sm bg-orange-50">
-                    <p> Available Delivery Boys:</p>
+            {/* {
+                data.shopOrders.status === "out for delivery"&&
+                <div className="mt-13 p-2 border rounded-lg text-sm bg-orange-50"> */}
+                    {/* { !data.shopOrders.assignedDeliveryBoy ?
+                    (
+ <p> Available Delivery Boys:</p>
+                    )
+                        
+                         :
+                         (
+                             <p>assigned to</p>
+                         )
+                    }
                {
-                availableBoys?.length >0?(
+                availableBoys.length >0?(
                                    availableBoys.map((value,index)=>(
                                     <div key={index} className="text-gray-800">{value.fullName}-{value.mobile}</div>
 
   
                                    ))
-                ):<div>
+                ):data.shopOrders.assignedDeliveryBoy?<div>{data.shopOrders.assignedDeliveryBoy.fullName}</div>
+                :<div>
                     Waiting for delivery boy to accept
                     </div>
                }
                     </div>
-            }
+            } */}
+{data.shopOrders.status === "out for delivery" && (
+  <div className="mt-3 p-2 border rounded-lg text-sm bg-orange-50">
+    
+    {data.shopOrders.assignedDeliveryBoy ? (
+      <div>
+        <p className="font-semibold">Assigned Delivery Boy:</p>
+        <p>
+          {data.shopOrders.assignedDeliveryBoy.fullName} –{" "}
+          {data.shopOrders.assignedDeliveryBoy.mobile}
+        </p>
+      </div>
+    ) : availableBoys.length > 0 ? (
+      <>
+        <p className="font-semibold">Available Delivery Boys:</p>
+        {availableBoys.map((boy, index) => (
+          <div key={index}>
+            {boy.fullName} – {boy.mobile}
+          </div>
+        ))}
+      </>
+    ) : (
+      <p>Waiting for delivery boy to accept</p>
+    )}
+  </div>
+)}
+
+
             <div className="text-right font-bold text-gray-800 text-sm">
                Total: ₹{data.shopOrders.subTotal}
                 </div>

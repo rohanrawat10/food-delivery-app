@@ -18,8 +18,17 @@ export default function DeliveryBoy() {
                   
         }
         catch(err){
-       console.log("get assignment error:",err)
-        }
+        }       console.log("get assignment error:",err)
+
+      }
+      const acceptOrder = async(assignmentId)=>{
+           try{
+           const result = await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`,{withCredentials:true})
+              console.log(result.data)
+          }
+          catch(err){
+            console.log("accept orders err:",err)
+          }
       }
       useEffect(()=>{
         getAssignments()
@@ -52,7 +61,9 @@ export default function DeliveryBoy() {
                <p className="flex gap-1 text-sm text-gray-500"><span className=" text-gray-500"><FaMapLocation size={15}  /></span>{a?.deliveryAddress.text}</p>
                <p className="text-xs text-gray-400">Qty:{a.items.length} | ₹{a.subTotal}</p>
                 </div>
-                <button className="bg-orange-500 m-2 text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600">Accept</button>
+                <button className="bg-orange-500 m-2 text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600"
+                onClick={()=>acceptOrder(a.assignmentId)}
+                >Accept</button>
 
                 </div>
             ))):
