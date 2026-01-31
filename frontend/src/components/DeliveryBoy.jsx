@@ -5,9 +5,15 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { FaLocationDot } from "react-icons/fa6";
 import { FaMapLocation } from "react-icons/fa6";
+import { current } from "@reduxjs/toolkit"
+ import { LuPackageCheck } from "react-icons/lu";
+import DeliveryBoyTracking from "./DeliveryBoyTracking"
+import { FaPhoneAlt } from "react-icons/fa";
 export default function DeliveryBoy() {
   const { userData, currentAddress } = useSelector(state => state.user)
   const [availableAssignments,setAvailableAssignments] = useState([])   
+  const [currentOrder,setCurrentOrder] = useState()
+  const [showOtpInput,setShowOtpInput] = useState(false)
   const getAssignments = async()=>{
         // console.log("sending", lat, lon)
 
@@ -15,7 +21,7 @@ export default function DeliveryBoy() {
             const result = await axios.get(`${serverUrl}/api/order/get-assignments`,{withCredentials:true})
                  setAvailableAssignments(result.data)
                   console.log("get Assignmenst console",result.data)
-                  
+                   
         }
         catch(err){
         }       console.log("get assignment error:",err)
@@ -24,14 +30,29 @@ export default function DeliveryBoy() {
       const acceptOrder = async(assignmentId)=>{
            try{
            const result = await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`,{withCredentials:true})
-              console.log(result.data)
+           await getCurrentOrder()     
+           console.log(result.data)
           }
           catch(err){
             console.log("accept orders err:",err)
           }
       }
+      const getCurrentOrder = async()=>{
+        try{
+          const result  = await axios.get(`${serverUrl}/api/order/current-order`,{withCredentials:true})
+         setCurrentOrder(result.data)
+          console.log("get current order",result.data)
+        }
+        catch(err){
+          console.log("get current order error:",err)
+        }
+      }
+      const handleSendOtp = (e)=>{
+        setShowOtpInput(true)
+      }
       useEffect(()=>{
         getAssignments()
+        getCurrentOrder()
       },[userData])
   return (
     <div className="w-screen min-h-screen flex flex-col gap-5 items-center bg-[#fff9f6] overflow-y-auto">
@@ -49,8 +70,11 @@ export default function DeliveryBoy() {
           </p>
 
         </div>
+            {
+              !currentOrder &&
         <div className="bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100">
           <h1 className="text-lg font-semibold mb-4 flex items-center p-2">Available Order</h1>
+        
              <div className="space-y-4">
            {
             availableAssignments.length > 0 ?
@@ -71,7 +95,40 @@ export default function DeliveryBoy() {
             
             }
              </div>
+             
         </div>
+          }
+          {
+            currentOrder && 
+            <div className="bg-white rounded-2xl p-5 mb-5 shadow-md w-[90%] border border-orange-100">
+              <h2><span className="text-orange-500 flex gap-1 justify-center pb-2"><LuPackageCheck size={25} /> Order</span></h2>
+                <div className="border rounded-lg p-2 mb-3">
+                  <p className="text-lg font-bold  mb-1">{currentOrder?.user?.fullName}</p>
+                    <p className=" text-sm text-gray-600 flex gap-1"><span><FaPhoneAlt size={15}/></span>{currentOrder.user.mobile}</p>
+                     <p className=" text-sm text-gray-600">{currentOrder.deliveryAddress.text}</p>
+                     <p className="text-xs text-gray-500">Qty:{currentOrder.shopOrder.shopOrderItems.length} || ₹{currentOrder.shopOrder.subTotal}</p>
+                  </div>
+                  <DeliveryBoyTracking data={currentOrder}/>
+                  { !showOtpInput ? 
+                  (
+            <button className="mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 
+            rounded-xl shadow-md hover:bg-green-600 active:scale-95 trasition-all duration-200
+            " onClick={()=>handleSendOtp()}>
+              Delivered
+              </button> ):(<div className="mt-4 p-4 border border-orange-200 rounded-xl bg-gray-50">
+          <p className="text-sm text-gray-700">Enter OTP:</p>
+          <input type="text" className="border w-full  rounded-xl border-orange-300 focus:ring-2 focus:ring-orange-500 focus:outline-none"/>
+               <button className="mt-4 w-full bg-orange-500 text-white font-semibold py-2 px-4 
+            rounded-xl shadow-md hover:bg-orange-600 active:scale-95 trasition-all duration-200
+            ">
+              Enter
+              </button>
+                </div>
+                )
+}
+              </div>
+                 
+          }
       </div>
       </div>
    

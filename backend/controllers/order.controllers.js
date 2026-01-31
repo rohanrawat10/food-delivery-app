@@ -464,17 +464,72 @@ export const getCurrentOrder = async(req,res)=>{
         if(!assignment.order){
          return res.status(400).json({message:"assignment order not found"})   
         }
-        const shopOrder = assignment.order.shopOrder.find(so=>String(so._id) ==String(assignment.shopOrderId))
+        const shopOrder = assignment.order.shopOrders.find(so=>String(so._id) ==String(assignment.shopOrderId))
        if(!shopOrder){
         return res.status(400).json({message:"shopOrder not found"})
        }
 
        let deliveryBoyLocation = {lat:null,lon:null}
-      deliveryBoyLocation.lat=  assignment.assignedTo.location.coordinates[1]
+       if(assignment.assignedTo.location.coordinates.length ==2){
+         deliveryBoyLocation.lat=  assignment.assignedTo.location.coordinates[1]
       deliveryBoyLocation.lon = assignment.assignedTo.location.coordinates[0]
-       const customerLocations = assignment.order.deliveryAddress
+       }
+    let customerLocation = {lat:null,lon:null}
+    // if(assignment.order.deliveryAddress.length == 2){
+    //  customerLocation.lat = assignment.order.deliveryAddress.latitude
+    // customerLocation.lon = assignment.order.deliveryAddress.longitude
+    // }
+
+    if (
+  assignment.order.deliveryAddress?.latitude &&
+  assignment.order.deliveryAddress?.longitude
+) {
+  customerLocation.lat = assignment.order.deliveryAddress.latitude;
+  customerLocation.lon = assignment.order.deliveryAddress.longitude;
+}
+   return res.status(200).json({
+    id:assignment.order._id,
+    user:assignment.order.user,
+    shopOrder,
+    deliveryAddress :assignment.order.deliveryAddress,
+    deliveryBoyLocation,
+   customerLocation
+   })
+
     }
     catch(err){
-         res.status(500).json({message:"get current orders error:",err})
+        console.error("get currentOrder Err:")
+        console.error(err)
+        console.error(err.stack)
+         res.status(500).json({message:"get current orders error:",error:err.message || err})
+    }
+}
+
+
+export const getOrderById = async(req,res)=>{
+    try{
+     const {orderId} = req.params
+     const order = await Order.findById(orderId)
+     .populate("user")
+     .populate({
+        path:"shopOrders.shop",
+        model:"Shop"
+     })
+      .populate({
+        path:"shopOrders.assignedDeliveryBoy",
+        model:"User"
+     })
+      .populate({
+        path:"shopOrders.shopOrderItems.item",
+        model:"Item"
+     })
+     .lean()
+     if(!order){
+        return res.status(404).json({message:"order not found"})
+     }
+     return res.status(200).json(order)
+    }
+    catch(err){
+        res.status(500).json({message:"Get order by Id error:",error:err.message})
     }
 }

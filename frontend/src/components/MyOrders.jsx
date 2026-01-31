@@ -16,7 +16,7 @@ function MyOrders() {
                     <IoArrowBackSharp
                         size={35}
                         className="fixed top-5 left-5 z-50 text-[#ff4d2d] cursor-pointer"
-                        onClick={() => navigate("/cart")}
+                        onClick={() => navigate("/")}
                     />
                 </div>):
                 (
