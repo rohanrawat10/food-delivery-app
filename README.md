@@ -10,7 +10,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - **Frontend:** React, Redux Toolkit, Tailwind CSS
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (Mongoose)
-- **Authentication:** JWT (Cookies)
+- **Authentication:** JWT (Cookies),firebase
 - **Other Tools:** Axios, Cloudinary, bcrypt, Nodemailer
 
 ---
