@@ -88,8 +88,7 @@ git clone https://github.com/rohanrawat10/food-delivery-app.git
 ```
 ### 2️⃣ Install dependencies
 ```bash
- cd frontend
- npm install
+
 
 cd ../backend
 npm install
