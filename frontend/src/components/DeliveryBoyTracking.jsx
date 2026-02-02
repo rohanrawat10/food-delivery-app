@@ -15,10 +15,10 @@ export default function DeliveryBoyTracking({data}){
     iconSize:[40,40],
     iconAnchor:[20,20]
    })
-   const deliveryBoyLat = data.deliveryBoyLocation.lat
-   const deliveryBoyLon = data.deliveryBoyLocation.lon
-     const customerLat = data.customerLocation.lat
-     const customerLon = data.customerLocation.lon
+   const deliveryBoyLat = data?.deliveryBoyLocation?.lat
+   const deliveryBoyLon = data?.deliveryBoyLocation?.lon
+     const customerLat = data?.customerLocation?.lat
+     const customerLon = data?.customerLocation?.lon
       const path = [
         [deliveryBoyLat,deliveryBoyLon],
         [customerLat,customerLon]

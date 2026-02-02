@@ -2,8 +2,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { serverUrl } from "../config"
 import { useEffect, useState } from "react"
 import { IoArrowBackSharp } from "react-icons/io5";
-
+import { MdCall } from "react-icons/md";
 import axios from "axios"
+import DeliveryBoyTracking from "./DeliveryBoyTracking";
 
 export default function TrackOrder(){
     const navigate = useNavigate()
@@ -17,10 +18,14 @@ export default function TrackOrder(){
             year: "numeric"
         })
     }
+    // console.log(
+    //     "current data",currentOrder
+    // )
     const handleGetOrder = async(orderId)=>{
+        if(!orderId)return
         try{
      const result = await axios.get(`${serverUrl}/api/order/get-order-by-id/${orderId}`,{withCredentials:true})
-        //   setCurrentOrder(result.data)    
+          setCurrentOrder(result.data)    
      console.log("hand get order",result.data)  
 
     }
@@ -29,16 +34,17 @@ export default function TrackOrder(){
         }
     }
     useEffect(()=>{
-        handleGetOrder()
+        // handleGetOrder()
+        if (orderId) handleGetOrder(orderId)
     },[orderId])
-
+ console.log(currentOrder?.shopOrders?.[0]?.assignedDeliveryBoy?.mobile)
     return(
        <div className="max-w-4xl mx-auto p-4 flex flex-col gap-6">
   {/* Left arrow */}
-  <div className=" relative flex items-center gap-4 top-20px left-20px z-10 mb-10px" onClick={() => {
+  <div className=" relative flex items-center gap-4 top-20px left-20px z-10 mb-10px cursor-pointer">
+    <IoArrowBackSharp size={30} className="text-[#ff4d2d]"   onClick={() => {
                     navigate("/")
-                }}>
-    <IoArrowBackSharp size={30} className="text-[#ff4d2d]"  />
+                }}/>
 
                  <h1 className="mx-auto text-2xl font-semibold">
     Order Details
@@ -50,7 +56,7 @@ export default function TrackOrder(){
 
   {/* Center text */}
 
-  {/* {
+   {
     currentOrder?.shopOrders?.map((shopOrder,index)=>(
         // <div className="bg-white p-4 rounded-2xl shadow-md border border-orange-50  space-y-4" key={index}>
         //     <div>
@@ -64,17 +70,39 @@ export default function TrackOrder(){
                     <p className="font-semibold">
                         order #{shopOrder?._id?.slice(-6)}
                     </p>
-                    <p className="text-sm text-gray-500">
-                        Date:{formatDate(data?.createdAt)}
+                    <p className="text-sm  font-semibold">
+                        {/* Date:{formatDate(currentOrder?.createdAt)} */}
+                    Delivery boy:{shopOrder?.assignedDeliveryBoy?.mobile}
                     </p>
                 </div>
                 <div className="text-right">
-                    <p className="text-sm text-gray-500">{shopOrder.paymentMethod?.toUpperCase()}</p>
-                    <p className="font-sm text-blue-500">{shopOrder.shopOrders?.[0].status}</p>
+                    {/* <p className="text-sm text-gray-500">{currentOrder?.paymentMethod?.toUpperCase()}</p> */}
+                    <p className="font-sm text-blue-900 flex flex-col">Amount:₹{currentOrder?.totalAmount}</p>
                 </div>
+              
+                 
             </div>
+
     ))
-  } */}
+  } 
+   {
+                  currentOrder?.shopOrders?.[0]?.assignedDeliveryBoy && 
+               <div className="h-[400px] w-full  bg-amber-50 rounded-2xl overflow-hidd">
+               <DeliveryBoyTracking data={
+                    {
+                        deliveryBoyLocation:{
+                            lat:currentOrder.shopOrders?.[0]?.assignedDeliveryBoy.location.coordinates[1],
+                            lon:currentOrder.shopOrders?.[0]?.assignedDeliveryBoy.location.coordinates[0]
+
+                        },
+                        customerLocation:{
+                          lat:currentOrder?.deliveryAddress?.latitude,
+                          lon:currentOrder?.deliveryAddress?.longitude
+                        }
+                    } 
+                 }/>
+                </div> 
+            }
 </div>
 
     )

@@ -114,7 +114,7 @@ export default function DeliveryBoy() {
             <button className="mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 
             rounded-xl shadow-md hover:bg-green-600 active:scale-95 trasition-all duration-200
             " onClick={()=>handleSendOtp()}>
-              Delivered
+              Mark as  Delivered
               </button> ):(<div className="mt-4 p-4 border border-orange-200 rounded-xl bg-gray-50">
           <p className="text-sm text-gray-700">Enter OTP:</p>
           <input type="text" className="border w-full  rounded-xl border-orange-300 focus:ring-2 focus:ring-orange-500 focus:outline-none"/>
