@@ -3,6 +3,7 @@ import Shop from "../models/shop.model.js"
 import User from "../models/user.model.js"
 import Item from "../models/item.model.js"
 import DeliveryAssignment from "../models/deliveryAssignment.model.js"
+import { sendDeliveryOtpMail } from "../utils/mail.js"
 export const placeOrder = async (req, res) => {
     try {
         const { cartItems, paymentMethod, deliveryAddress, totalAmount } = req.body
@@ -544,42 +545,93 @@ export const sendDeliveryOtp = async(req,res) =>{
      if(!order || !shopOrder){
       return res.status(400).json({message:"enter valid order/shopOrder Id"})
      }
-     const otp = Math.floor(1000+Math.random()*900).toString()
+
+     const otp = Math.floor(1000 + Math.random()  *9000).toString()
      shopOrder.deliveryOtp = otp
      shopOrder.otpExpires = Date.now()+5*60*1000
      await order.save()
-     await sendDeliveryOtp(order.user,otp)
+     await sendDeliveryOtpMail(order.user,otp)
      return res.status(200).json({message:"Otp sent Succesfully"})
   }
   catch(err){
-     res.status(500).json({message:"send Delivery Otp error:",err})
+    console.error("send Deliver OTP error:",err)
+     res.status(500).json(
+      {message:"send Delivery Otp error:",
+        error:err.message
+      })
   }
 
 
 }
 
 
-export const verifyDeliveryOtp = async (req,res)=>{
-  try{
-    const {orderId,shopOrderId,otp} = req.body
-    const order = await Order.findById(orderId).populate("user")
-     const shopOrder = order.shopOrders.id(shopOrderId)
-     if(!order || !shopOrder){
-      return res.status(400).json({message:"Enter valid order/shopOrderId"})
-     }
-     if(shopOrder.deliveryOtp !==otp || !shopOrder.otpExpires || shopOrder.otpExpires<Date.now()){
-      return res.status(400).json({message:"invalid Otp"})
-     }
-     shopOrder.status=="delivered"
-     shopOrder.deliveredAt = Date.now()
-     await order.save()
-     await DeliveryAssignment.deleteOne({
-      shopOrderId:shopOrder._id,
-      order:orderId,
-      assignedTo:shopOrder.assignedDeliveryBoy
-     })
+
+// 
+// export const verifyDeliveryOtp = async (req,res)=>{
+//   try{
+//     // console.log("verifyDeliveryOtp request body:", req.body);
+
+//         const {orderId ,shopOrderId,otp} = req.body
+//     // console.log("orderId:", orderId, "shopOrderId:", shopOrderId, "otp:", otp);
+
+// // console.error("verifyDeliveryOtp request body:", req.body);
+// //     console.error("Using orderId:", orderId, "shopOrderId:", shopOrderId, "otp:", otp);
+//     const order = await Order.findById(orderId).populate("user")
+//      const shopOrder = order.shopOrders.id(shopOrderId)
+//      if(!order || !shopOrder){
+//       return res.status(400).json({message:"Enter valid order/shopOrderId"})
+//      }
+//      if(shopOrder.deliveryOtp.toString() !==otp.toString() || !shopOrder.otpExpires || shopOrder.otpExpires<Date.now()){
+//       return res.status(400).json({message:"invalid Otp"})
+//      }
+//      shopOrder.status="delivered"
+//      shopOrder.deliveredAt = Date.now()
+//      await order.save()
+//      await DeliveryAssignment.deleteOne({
+//       shopOrderId:shopOrder._id,
+//       order:orderId,
+//       assignedTo:shopOrder.assignedDeliveryBoy
+//      })
+
+//      return res.status(200).json({message:"Order Delivered Succesfully!"})
     
-       }catch(err){
-        res.status(500).json({message:"Verify delivery otp:",err})
-       }
+//        }catch(err){
+//         console.log("verify delivery otp error:",err)
+//         res.status(500).json({message:"Verify delivery otp:",
+//         error:err.message  
+//         })
+//        }
+//   }
+
+
+const verifyDeliveryOtp = async () => {
+  if (!currentOrder || !currentOrder.shopOrder) {
+    console.error("Current order or shop order missing:", currentOrder);
+    return;
   }
+
+  try {
+    console.log("Verifying OTP with payload:", {
+      orderId: currentOrder.id,        // top-level id
+      shopOrderId: currentOrder.shopOrder._id, // nested _id
+      otp
+    });
+
+    const result = await axios.post(
+      `${serverUrl}/api/order/verify-delivery-otp`,
+      {
+        orderId: currentOrder.id,
+        shopOrderId: currentOrder.shopOrder._id,
+        otp
+      },
+      { withCredentials: true }
+    );
+
+    console.log("verify delivery otp", result.data);
+  } catch (err) {
+    console.error(
+      "verify Delivery Otp:",
+      err.response?.data || err.message
+    );
+  }
+};

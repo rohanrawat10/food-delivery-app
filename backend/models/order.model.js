@@ -35,8 +35,8 @@ const shopOrderSchema = new mongoose.Schema({
          ref:"User"
     },
     deliveryOtp:{
-        type:String,
-        defualt:null
+        type:String, 
+        default:null
     },
     
     otpExpires:{

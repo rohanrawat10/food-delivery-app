@@ -22,11 +22,11 @@ dotenv.config();
     })
  }
  
-  export const sendDeliveryOtp = async (user,otp)=>{
+  export const sendDeliveryOtpMail = async (user,otp)=>{
     await transporter.sendMail({
         from:process.env.EMAIL,
         to:user.email,
-        subject:"Reset Your Password",
+        subject:"Delivery Confirmation Code",
         html:`<p>Hi there! 👋</p>
 <p>We’re at your doorstep! 😊 To complete your delivery, please provide the OTP to the delivery partner only after receiving your order. This ensures a safe and smooth delivery experience for you.:</p>
 <h2><b>${otp}</b></h2>

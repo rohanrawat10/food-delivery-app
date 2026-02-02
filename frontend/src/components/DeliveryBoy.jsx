@@ -14,6 +14,8 @@ export default function DeliveryBoy() {
   const [availableAssignments,setAvailableAssignments] = useState([])   
   const [currentOrder,setCurrentOrder] = useState()
   const [showOtpInput,setShowOtpInput] = useState(false)
+  const [otp,setOtp] = useState("");
+  const [loading,setLoading] = useState(false)
   const getAssignments = async()=>{
         // console.log("sending", lat, lon)
 
@@ -24,10 +26,12 @@ export default function DeliveryBoy() {
                    
         }
         catch(err){
-        }       console.log("get assignment error:",err)
+              console.log("get assignment error:",err)
+               }
 
       }
       const acceptOrder = async(assignmentId)=>{
+        setLoading(true)
            try{
            const result = await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`,{withCredentials:true})
            await getCurrentOrder()     
@@ -35,6 +39,9 @@ export default function DeliveryBoy() {
           }
           catch(err){
             console.log("accept orders err:",err)
+          }
+          finally {
+            setLoading(false)
           }
       }
       const getCurrentOrder = async()=>{
@@ -47,8 +54,42 @@ export default function DeliveryBoy() {
           console.log("get current order error:",err)
         }
       }
+      const sendDeliveryOtp = async()=>{
+        setLoading(true)
+              try{
+      const result = await axios.post(`${serverUrl}/api/order/send-delivery-otp`,{
+        orderId:currentOrder.id,shopOrderId:currentOrder.shopOrder._id,
+      },{withCredentials:true})
+      setShowOtpInput(true)
+          console.log("Get Delivery Otp",result.data)         
+    }
+              catch(err){
+            console.error("Get otp error:",err)
+              }
+              finally{
+                setLoading(false)
+              }
+      }
+          
+      const verifyDeliveryOtp = async()=>{
+        setLoading(true)
+        try{
+         const result = await axios.post(`${serverUrl}/api/order/verify-delivery-otp`,{
+           orderId:currentOrder.id,shopOrderId:currentOrder.shopOrder._id,otp
+         },{withCredentials:true})
+        console.log("verify delivery otp",result.data)
+        console.log("currrent:",currentOrder)
+        
+        }
+        catch(err){
+           console.error("verify Delivery Otp:",err)
+        }
+        finally{
+          setLoading(false)
+        }
+      }
       const handleSendOtp = (e)=>{
-        setShowOtpInput(true)
+        // setShowOtpInput(true)
       }
       useEffect(()=>{
         getAssignments()
@@ -86,7 +127,7 @@ export default function DeliveryBoy() {
                <p className="text-xs text-gray-400">Qty:{a.items.length} | ₹{a.subTotal}</p>
                 </div>
                 <button className="bg-orange-500 m-2 text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600"
-                onClick={()=>acceptOrder(a.assignmentId)}
+                onClick={()=>acceptOrder(a.assignmentId) } disabled={loading}
                 >Accept</button>
 
                 </div>
@@ -113,14 +154,14 @@ export default function DeliveryBoy() {
                   (
             <button className="mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 
             rounded-xl shadow-md hover:bg-green-600 active:scale-95 trasition-all duration-200
-            " onClick={()=>handleSendOtp()}>
+            " onClick={sendDeliveryOtp} disabled={loading}>
               Mark as  Delivered
               </button> ):(<div className="mt-4 p-4 border border-orange-200 rounded-xl bg-gray-50">
           <p className="text-sm text-gray-700">Enter OTP:</p>
-          <input type="text" className="border w-full  rounded-xl border-orange-300 focus:ring-2 focus:ring-orange-500 focus:outline-none"/>
+          <input type="text" className="border w-full  rounded-xl border-orange-300 focus:ring-2 focus:ring-orange-500 focus:outline-none" onChange={(e)=>setOtp(e.target.value)} value={otp}/>
                <button className="mt-4 w-full bg-orange-500 text-white font-semibold py-2 px-4 
             rounded-xl shadow-md hover:bg-orange-600 active:scale-95 trasition-all duration-200
-            ">
+            "  onClick={verifyDeliveryOtp} disabled={loading}>
               Enter
               </button>
                 </div>
