@@ -1,4 +1,4 @@
-export default function ShopsInCityCard({name,image}){
+export default function ShopsInCityCard({name,image ,onClick}){
     return (
   <div
     className="group relative w-[130px] h-[130px] md:min-w-[180px] rounded-2xl
@@ -10,7 +10,7 @@ export default function ShopsInCityCard({name,image}){
       alt=""
       className="w-full h-full object-cover transform
       group-hover:scale-110 transition-transform duration-300"
-    />
+    onClick={onClick}/>
 
     <div
       className="absolute bottom-0 left-0 w-full px-3 py-1

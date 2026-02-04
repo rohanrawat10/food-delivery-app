@@ -7,24 +7,44 @@ import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { useSelector } from "react-redux";
 import ShopsInCityCard from "./ShopsInCityCard";
 import FoodItemsCard from "./FoodItemsCard";
+import { useNavigate } from "react-router-dom";
+import SearchedFoodItemsCard from "./SearchedFoodItemsCard";
 export default function UserDashboard(){
-  const {currentCity,shopsInCity,itemsInCity } = useSelector(state => state.user);
-    const cateScrollRef = useRef();
+  const {currentCity,shopsInCity,itemsInCity,searchItems } = useSelector(state => state.user);
+  const navigate = useNavigate(); 
+  const cateScrollRef = useRef();
     const shopScrollRef = useRef();
     const itemScrollRef = useRef();
     const [showLeftButton,setShowLeftButton] = useState(false);
      const [showRightButton,setShowRightButton] = useState(false);
       const [showShopLeftButton,setShowShopLeftButton] = useState(false);
      const [showShopRightButton,setShowShopRightButton] = useState(false);
-     const [showItemLeftButton,setShowItemLeftButton] = useState(false);
-     const [showItemRightButton,setShowItemRightButton] = useState(false);
-    const updateButton=(ref,setLeftButton,setRightButton)=>{
+    //  const [showItemLeftButton,setShowItemLeftButton] = useState(false);
+    //  const [showItemRightButton,setShowItemRightButton] = useState(false);
+    const [updateItemList,setUpdateItemList]  = useState([])
+
+const handleFilterByCategory = (category)=>{
+if(category == "All"){
+  setUpdateItemList(itemsInCity)
+}
+else{
+  const filteredList = itemsInCity?.filter(i=>i.category.toLowerCase()  === category.toLowerCase() )
+    setUpdateItemList(filteredList)
+}
+// console.log("update item list",updateItemList)
+}
+ useEffect(()=>{
+      setUpdateItemList(itemsInCity)
+    },[itemsInCity])
+
+     const updateButton=(ref,setLeftButton,setRightButton)=>{
         const element = ref.current;
         if(element){
           setLeftButton(element.scrollLeft>0)
           setRightButton(element.scrollLeft+element.clientWidth<element.scrollWidth)
         }
     }
+   
     
     // const scrollHandler = (ref,direction)=>{
     //   if(ref.current){
@@ -105,6 +125,8 @@ export default function UserDashboard(){
         //  itemE1?.removeEventListener("scroll",handleItemScroll)
       }
     },[shopsInCity])
+
+
 //     useEffect(() => {
 //   const cateEl = cateScrollRef.current;
 //   const shopEl = shopScrollRef.current;
@@ -123,6 +145,20 @@ export default function UserDashboard(){
     return(
           <div className="w-full min-h-screen bg-[#fff9f6] flex flex-col items-center">
           <Nav/>
+{
+  searchItems && searchItems.length>0 && (
+  <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-3  bg-white shadow-md rounded-2xl mt-15 lg:mt-1">
+  <h1 className="text-gray-900 text-lg sm:text-md ld:m-30 font-semibold border-b border-gray-200 pb-2">Search Results</h1>
+   <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-2 gap-10">
+    {
+      searchItems.map((item)=>(
+        <SearchedFoodItemsCard data={item} key={item.id}/>
+      ))
+    }
+    </div>
+    </div>
+  )
+}
           <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-2.5 pt-20 lg:pt-7">
             <h1 className="text-gray-800 e text-2xl sm:text-3xl">Insipiration for your first order</h1>
                <div className="w-full relative rounded-2xl">
@@ -136,7 +172,7 @@ export default function UserDashboard(){
                  ref={cateScrollRef}
                 >
                {categories.map((cate,index)=>(
-                  <CategoryCard name={cate.category} image={cate.image} key={index}/>
+                  <CategoryCard name={cate.category} image={cate.image} key={index} onClick={()=>handleFilterByCategory(cate.category)}/>
                ))}
                </div>
                { showRightButton &&
@@ -163,7 +199,7 @@ export default function UserDashboard(){
                  ref={shopScrollRef}
                 >
                {shopsInCity?.map((shop,index)=>(
-                  <ShopsInCityCard name={shop.name} image={shop.image} key={index}/>
+                  <ShopsInCityCard name={shop.name} image={shop.image} key={index} onClick={()=>navigate(`/get-by-shop/${shop._id}`)}/>
                ))}
                </div>
                { showShopRightButton &&
@@ -182,7 +218,7 @@ export default function UserDashboard(){
             <div className="w-full max-w-6xl flex flex-col gap-10 items-start p-2.5 pt-5 lg:pt-5">
              <h1 className="text-gray-800 e text-2xl sm:text-3xl">Suggested Items</h1>
              <div  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 ">
-                  {itemsInCity.map((item,index) => (
+                  {updateItemList?.map((item,index) => (
                     <FoodItemsCard data={item} key={index} />
                   ))}
                 </div>

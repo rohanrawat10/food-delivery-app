@@ -18,7 +18,7 @@ export default function AddItems() {
     const [foodType,setFoodType] = useState("veg")
     const categories = [
          "snacks",
-            "main course",
+            
             "desserts",
             "pizza",
             "burgers",

@@ -1,9 +1,9 @@
-export default function CategoryCard({name,image}){
+export default function CategoryCard({name,image,onClick}){
     return(
         <div className="relative w-[120px] h-[120px] md:min-w-[180px] rounded-2xl
         border-2 border-orange-200 shrink-0 overflow-hidden bg-white
         shadow-xl shadow-gray-200 hover:shadow-lg transition-shadow
-        ">
+        " onClick={onClick}>
          <img src={image} alt=""
          className=" w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
          />

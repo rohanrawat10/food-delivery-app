@@ -23,6 +23,7 @@ import MyOrders from "./components/MyOrders";
 import useGetMyOrders from "./hooks/useGetMyOrders";
 import useUpdateLocation from "./hooks/useUpdateLocation";
 import TrackOrder from "./components/TackOrder";
+import GetItemsByShop from "./components/GetItemsByShop";
 // export const severUrl = "http://localhost:8000";
 export default function App() {
   useGetCurrentUser();
@@ -60,7 +61,7 @@ export default function App() {
         <Route path="/order-placed" element={userData ? <OrderPlaced/> : <Navigate to="/signin" />} />
           <Route path="/my-orders" element={userData ? <MyOrders/> : <Navigate to="/signin" />} />
                <Route path="/track-order/:orderId" element={userData ? <TrackOrder/> : <Navigate to="/signin" />} />
-
+       <Route path="/get-by-shop/:shopId" element={userData ? <GetItemsByShop/>:<Navigate to="/signin"/>}/>
       </Routes>
 
     </div>
