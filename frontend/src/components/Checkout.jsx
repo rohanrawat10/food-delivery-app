@@ -23,7 +23,7 @@ function RecenterMap({ location }) {
 }
 function Checkout() {
   // const {cartItems} = useSelector(state=>state.user)
-   const {cartItems,totalAmount} = useSelector(state=>state.user)
+   const {cartItems,totalAmount,userData} = useSelector(state=>state.user)
   const { location, address } = useSelector(state => state.map)
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -67,8 +67,10 @@ function Checkout() {
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       // console.log(position)
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+      // const latitude = position.coords.latitude;
+      // const longitude = position.coords.longitude;
+      const latitude = userData.location.coordinates[1];
+      const longitude = userData.location.coordinates[0]
       dispatch(setLocation({ lat: latitude, lon: longitude }))
       //  dispatch(setAddress({lat:latitude,lon:longitude}))
       getAddressByLatLng(latitude, longitude)
@@ -90,6 +92,7 @@ function Checkout() {
     setAddressInput(address)
   }, [address])
 
+  
   const handlePlaceOrder = async()=>{
     try{
     const result = await axios.post(`${serverUrl}/api/order/place-order`,{
@@ -103,16 +106,50 @@ function Checkout() {
             cartItems
  
     },{withCredentials:true})
-     navigate("/order-placed")
-     dispatch(addMyOrder(result.data))
+
+    if(paymentMethod == "cod"){
+      dispatch(addMyOrder(result.data))
+     navigate("/order-placed")      
+    }
+     else{
+      const orderId = result.data.orderId;
+      const razorOrder = result.data.razorOrder;
+   openRazorpayWindow(orderId,razorOrder)
+     }
     // console.log("orders",result.data)
     // navigate("/order-placed")
     }
     catch(err){
       console.log("place order error",err)
       
-    }
   }
+  }
+  const openRazorpayWindow = (orderId,razorOrder)=>{
+      const options = {
+     key:import.meta.env.VITE_RAZORPAY_KEY_ID,
+     amount:razorOrder.amount,
+     currency:"INR",
+     name:"hungerstrike",
+     description:"Food Delivery Website",
+     order_id:razorOrder.id,
+     handler:async function(response){
+      try{
+         const result = await axios.get(`${serverUrl}/api/order/verify-payment`,{
+          razorpay_payment_id :response.razorpay_payment_id,
+          orderId
+
+         },{withCredentials:true})
+           dispatch(addMyOrder(result.data))
+     navigate("/order-placed")  
+      }
+      catch(err){
+        console.error("open razor window err:",err)
+      }
+     }
+      }
+const rzp = new window.Razorpay(options)
+rzp.open()
+    }
   return (
     <div className="min-h-screen bg-[#fff9f6] p-6 flex items-center justify-center">
       <IoArrowBackSharp
@@ -214,10 +251,13 @@ function Checkout() {
     
         </section>
         <section>
-           <button className="w-full bg-[#ff4d2d] hover:bg-[#d64526] text-white py-3 m-2 rounded-xl
+             <div className="flex justify-between items-center pt-2">
+
+           <button className="w-xl lg:w-full bg-[#ff4d2d] hover:bg-[#d64526] text-white py-3 pt-2 mx-2 rounded-xl
         font-semibold" onClick={handlePlaceOrder}>
           {paymentMethod =="cod"?"Place Order":"pay & place Order"}
           </button>
+          </div>
         </section>
       </div>
     </div>

@@ -149,7 +149,7 @@ else{
   searchItems && searchItems.length>0 && (
   <div className="w-full max-w-6xl flex flex-col gap-5 items-start p-3  bg-white shadow-md rounded-2xl mt-15 lg:mt-1">
   <h1 className="text-gray-900 text-lg sm:text-md ld:m-30 font-semibold border-b border-gray-200 pb-2">Search Results</h1>
-   <div className="grid grid-cols-4 md:grid-cols-3 lg:grid-cols-2 gap-10">
+   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10">
     {
       searchItems.map((item)=>(
         <SearchedFoodItemsCard data={item} key={item.id}/>

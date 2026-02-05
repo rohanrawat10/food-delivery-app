@@ -59,11 +59,11 @@ export default function SearchedFoodItemsCard({ data }) {
   className="relative bg-linear-to-br from-gray-100 to-gray-200
   rounded-3xl overflow-hidden shadow-lg
   hover:shadow-2xl
-  flex flex-row gap-4 p-4
+  flex flex-row gap-2 p-2
   transition-all duration-300"
 >
   {/* LEFT: IMAGE */}
-  <div className="relative w-[140px] h-[140px] flex-shrink-0 rounded-2xl overflow-hidden bg-white">
+  <div className="relative w-[140px] h-[140px] shrink rounded-2xl overflow-hidden bg-white">
     <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow z-10">
       {
         data.foodType === "veg"
