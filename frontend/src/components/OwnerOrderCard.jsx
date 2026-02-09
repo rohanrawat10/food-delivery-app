@@ -38,10 +38,14 @@ function OwnerOrderCard({ data }) {
                 <h2 className="text-lg font-semibold text-gray-800">{data?.user?.fullName}</h2>
                 <p className="text-sm text-gray-500 ">{data?.user?.email}</p>
                 <p className="flex items-center gap-2 text-sm text-gray-600 mt-1"><FaPhoneAlt /><span>{data?.user?.mobile}</span></p>
-
+                {/* <p className="flex items-center gap-2 text-sm text-gray-600 mt-1">Payment method:{data.paymentMethod}</p> */}
+                 {
+                  data.paymentMethod === "online" ? <p className="text-sm text-gray-500 ">payment: <span className="text-blue-500 font-semibold px-1 ">{data.payment?"Pending":"Completed"}</span></p>:<p className="text-sm text-gray-500 ">Payment:<span className="text-blue-500 font-semibold px-1 ">{data.paymentMethod.toUpperCase()}</span></p>
+                }
             </div>
             <div className="flex items-start gap-2 text-gray-600 text-sm">
-                <p>{data?.deliveryAddress?.text}</p>
+               
+                <p>{data?.deliveryAddress?.text =="online"}</p>
             </div>
             <div className="flex space-x-4 overflow-x-auto pb-2">
                 {

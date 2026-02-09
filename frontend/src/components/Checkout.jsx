@@ -102,7 +102,7 @@ function Checkout() {
               latitude:location.lat,
               longitude:location.lon
             },
-            totalAmount,
+            totalAmount:amountWithAllTaxes,
             cartItems
  
     },{withCredentials:true})
@@ -134,7 +134,7 @@ function Checkout() {
      order_id:razorOrder.id,
      handler:async function(response){
       try{
-         const result = await axios.get(`${serverUrl}/api/order/verify-payment`,{
+         const result = await axios.post(`${serverUrl}/api/order/verify-payment`,{
           razorpay_payment_id :response.razorpay_payment_id,
           orderId
 

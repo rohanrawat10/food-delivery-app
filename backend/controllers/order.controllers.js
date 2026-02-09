@@ -62,25 +62,25 @@ export const placeOrder = async (req, res) => {
     })
     )
     if (paymentMethod == "online") {
-         const razorOrder = await instance.orders.create({
-          amount:Math.round(totalAmount*100),
-          currency:"INR",
-          receipt:`receipt_${Date.now()}`
-         })
-         const newOrder = await Order.create({
-      user: req.userId,
-      paymentMethod,
-      deliveryAddress,
-      totalAmount,
-      shopOrders,
-      razorpayOrderId: razorOrder.id,
-      payment:false,
-    })
-    return res.status(200).json({
-      razorOrder,
-      orderId : newOrder._id,
-      // key_id:process.env.RAZORPAY_KEY_ID
-    })
+      const razorOrder = await instance.orders.create({
+        amount: Math.round(totalAmount * 100),
+        currency: "INR",
+        receipt: `receipt_${Date.now()}`
+      })
+      const newOrder = await Order.create({
+        user: req.userId,
+        paymentMethod,
+        deliveryAddress,
+        totalAmount,
+        shopOrders,
+        razorpayOrderId: razorOrder.id,
+        payment: false,
+      })
+      return res.status(200).json({
+        razorOrder,
+        orderId: newOrder._id,
+        // key_id:process.env.RAZORPAY_KEY_ID
+      })
     }
 
     const newOrder = await Order.create({
@@ -91,7 +91,25 @@ export const placeOrder = async (req, res) => {
       shopOrders
     })
     await newOrder.populate("shopOrders.shopOrderItems.item", "name image price")
-    await newOrder.populate("shopOrders.shop", "name")
+    await newOrder.populate("shopOrders.shop", "name socketId")
+    await newOrder.populate("user","name email mobile")
+    const io = req.app.get('io')
+    if (io) {
+      newOrder.shopOrders.forEach(shopOrder => {
+        const ownerSocketId = shopOrder.owner.socketId
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit('newOrder', {
+            _id: newOrder._id,
+            paymentMethod: newOrder.paymentMethod,
+            user: newOrder.user,
+            shopOrders:shopOrder,
+            createdAt: newOrder.createdAt,
+            deliveryAddress: newOrder.deliveryAddress,
+            payment:newOrder.payment
+          })
+        }
+      })
+    }
     return res.status(201).json(newOrder)
   }
   catch (err) {
@@ -99,26 +117,46 @@ export const placeOrder = async (req, res) => {
   }
 }
 
-export const verifyPayment = async(req,res)=>{
-  try{
-  const{razorpay_payment_id,orderId} = req.body
-  const payment = await instance.payments.fetch()
-  if(!payment || payment.status !== "captured"){
-    return res.statsu(400).json({message:"Payment not captured"})
-  }
-  const order = await Order.findById(orderId)
-  if(!order){
-    return res.status(400).json({message:"order not found"})
-  }
-  order.payment = true
-  order.razorpayPaymentId = razorpay_payment_id
-  await order.save();
-   await newOrder.populate("shopOrders.shopOrderItems.item", "name image price")
-    await newOrder.populate("shopOrders.shop", "name")
+export const verifyPayment = async (req, res) => {
+  try {
+    const { razorpay_payment_id, orderId } = req.body
+    const payment = await instance.payments.fetch(razorpay_payment_id)
+    if (!payment || payment.status !== "captured") {
+      return res.status(400).json({ message: "Payment not captured" })
+    }
+    const order = await Order.findById(orderId)
+    if (!order) {
+      return res.status(400).json({ message: "order not found" })
+    }
+    order.payment = true
+    order.razorpayPaymentId = razorpay_payment_id
+    await order.save();
+    await order.populate("shopOrders.shopOrderItems.item", "name image price")
+    await order.populate("shopOrders.shop", "name socketId")
+        await order.populate("user","name email mobile")
+
+    const io = req.app.get('io')
+    if (io) {
+      order.shopOrders.forEach(shopOrder => {
+         if (!shopOrder.owner) return;
+        const ownerSocketId = shopOrder.owner.socketId
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit('newOrder', {
+            _id: order._id,
+            paymentMethod: order.paymentMethod,
+            user: order.user,
+            shopOrders:shopOrder,
+            createdAt: order.createdAt,
+            deliveryAddress: order.deliveryAddress,
+            payment:order.payment
+          })
+        }
+      })
+    }
     return res.status(200).json(order)
   }
-  catch(err){
-    return res.status(500).json({message:"verify payment error:",err})
+  catch (err) {
+    return res.status(500).json({ message: "verify payment error:", err })
   }
 }
 
@@ -149,7 +187,8 @@ export const getMyOrders = async (req, res) => {
         user: order.user,
         shopOrders: order.shopOrders.find(o => o.owner._id == req.userId),
         createdAt: order.createdAt,
-        deliveryAddress: order.deliveryAddress
+        deliveryAddress: order.deliveryAddress,
+        payment:order.payment
       })))
       return res.status(200).json(filteredOrders)
     }
@@ -273,8 +312,25 @@ export const updateOrderStatus = async (req, res) => {
       o => o.shop.toString() === shopId
     );
 
-    await order.populate("shopOrders.assignedDeliveryBoy", "fullName email mobile");
+    // await order.populate("shopOrders.assignedDeliveryBoy", "fullName email mobile");
     await order.populate("shopOrders.shop", "name");
+      await order.populate("shopOrders.assignedDeliveryBoy", "fullName email mobile");
+    await order.populate("user", "socketId");
+
+    const io = req.app.get('io')
+    if(io){
+        const userSocketId = order.user.socketId
+        if(userSocketId){
+          io.to(userSocketId).emit("update-status",{
+            orderId:order._id,
+            shopId:updatedShopOrder.shop._id,
+            shopId:updatedShopOrder.status,
+            userId:order.user._id
+
+          })
+        }
+    }
+
 
     return res.status(200).json({
       shopOrder: updatedShopOrder,
@@ -382,7 +438,7 @@ export const acceptOrders = async (req, res) => {
     const { assignmentId } = req.params
     const assignment = await DeliveryAssignment.findById(assignmentId)
     if (!assignment) {
-      return res.status(400).json({ message: "assingment not found" })
+      return res.status(404).json({ message: "assingment not found" })
     }
     if (assignment.status !== 'broadcasted') {
       return res.status(400).json({ message: "assignment is expired" })

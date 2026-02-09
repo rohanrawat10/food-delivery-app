@@ -53,8 +53,15 @@ location: {
   coordinates: {
     type: [Number],
     default:[0,0]
-  }
+  },
 },
+ socketId:{
+    type:String
+  },
+  isOnline:{
+    type:Boolean,
+    default:false
+  },
 
 // location: {
 //   type: {
