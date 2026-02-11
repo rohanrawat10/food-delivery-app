@@ -11,7 +11,7 @@ The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, eac
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (Mongoose)
 - **Authentication:** JWT (Cookies),firebase
-- **Other Tools:** Axios, Cloudinary, bcrypt, Nodemailer
+- **Other Tools:** Axios, Cloudinary, bcrypt, Nodemailer, socket.io
 
 ---
 
