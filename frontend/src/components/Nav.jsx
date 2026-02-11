@@ -14,7 +14,7 @@ import { IoReceiptSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 export default function Nav() {
   const navigate = useNavigate();
-  const { userData, currentCity, cartItems } = useSelector(state => state.user);
+  const { userData, currentCity, cartItems,myOrders } = useSelector(state => state.user);
   const { myShopData } = useSelector(state => state.owner);
   const [popUp, setPopup] = useState(false);
   const dispatch = useDispatch()
@@ -289,7 +289,7 @@ handleSearchItems()
         bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" onClick={() => navigate("/my-orders")} >
               My Orders
               <span className="absolute right-[-8px] top-[-10px] text-sm text-[#ff4d2d]">
-                0
+                {myOrders.length}
               </span>
             </button>
             {/* small screen */}
@@ -340,17 +340,17 @@ handleSearchItems()
             </h1>
             <div className="flex items-center gap-5">
               {/* My Orders */}
-              <button className=" hidden sm:flex relative px-3 py-1 rounded-lg 
+              {/* <button className=" hidden sm:flex relative px-3 py-1 rounded-lg 
         bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium cursor-pointer" onClick={() => navigate("/my-orders")} >
                 My Orders
                 <span className="absolute right-[-8px] top-[-10px] text-sm text-[#ff4d2d]">
                   0
                 </span>
-              </button>
+              </button> */}
               {/* small screen */}
-              <button className="flex sm:hidden   text-[#ff4d2d] rounded-lg cursor-pointer" onClick={() => navigate("/my-orders")}>
+              {/* <button className="flex sm:hidden   text-[#ff4d2d] rounded-lg cursor-pointer" onClick={() => navigate("/my-orders")}>
                 <IoReceiptSharp size={26} />
-              </button>
+              </button> */}
               <div
                 className="w-[40px] h-[40px] rounded-full bg-[#ff4d2d] text-white
         flex items-center justify-center cursor-pointer"

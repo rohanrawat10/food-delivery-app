@@ -184,20 +184,20 @@ export const deleteItem = async(req,res)=>{
       export const rating = async(req,res)=>{
         try{
        const {itemId,rating} = req.body
-       if(!itemId || !rating){
+       if(!itemId || rating==null){
         return res.status(400).json({message:"item id and rating are required"})
        }
-       if(rating<1 || rating>5){
+       if(rating<0 || rating>5){
         return res.status(400).json({message:"rating must be between 1-5"})
        }
-       const item = await  item.findById(itemId)
+       const item = await  Item.findById(itemId)
        if(!item){
         return res.status(400).json({message:"item not found"})
        }
        const newCount = item.rating.count +1
        const newAverage = (item.rating.average *item.rating.count + rating) / newCount
        item.rating.count = newCount 
-       item.newAverage.average = newAverage
+       item.rating.average = newAverage
        await item.save()
 
        return res.status(200).json({rating:item.rating})

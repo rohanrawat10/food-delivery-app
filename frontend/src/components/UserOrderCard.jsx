@@ -1,10 +1,14 @@
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { serverUrl } from "../config"
+import { useState } from "react"
+import { TiStar } from "react-icons/ti";
+import { TiStarFullOutline } from "react-icons/ti";
+
 
 function UserOrderCard({ data }) {
-     const navigate = useNavigate()
-     const [selectedRating,setSelectedRating] = useState({})//itemId:rating
+    const navigate = useNavigate()
+    const [selectedRating, setSelectedRating] = useState({})//itemId:rating
     const formatDate = (dateString) => {
         const date = new Date(dateString)
         return date.toLocaleDateString("en-GB", {
@@ -14,17 +18,19 @@ function UserOrderCard({ data }) {
         })
     }
 
-    const handleRating = async ()=>{
-        try{
-      const result = await axios.post(`${serverUrl}/api/item/rating`,{itemId,rating},{withCredentials:true})
-        setSelectedRating(prev=>({
-            ...prev,[itemId]:rating
-        }))
-    }
-        catch(err){
-         console.log("handle rating error:",err)
+    const handleRating = async (itemId, rating) => {
+        try {
+            const numericRating = Number(rating);
+            await axios.post(`${serverUrl}/api/item/rating`, { itemId, rating: numericRating }, { withCredentials: true })
+            setSelectedRating(prev => ({
+                ...prev, [itemId]: numericRating
+            }))
+        }
+        catch (err) {
+            console.log("handle rating error:", err)
         }
     }
+    console.log("data", data)
     return (
         <div className="bg-white rounded-lg shadow p-4 space-y-4">
             <div className="flex justify-between border-b pb-2">
@@ -53,13 +59,34 @@ function UserOrderCard({ data }) {
                                         <img src={item.item.image} alt="" className="w-full h-24 object-cover rounded" />
                                         <p className="text-sm text-center font-semibold mt-1">{item.name}</p>
                                         <p className="text-sm text-center">₹{item.price}*{item.quantity}</p>
-                                    {
-                                        shopOrder.status =="delivered" && <div className="flex space-x-1 mt-2">
-                                         {   [1,2,3,4,5].map((star)=>(
-                                                <button className={`text-lg ${selectedRating[item.item._id]>=star?"text-yellow-500":"text-gray-400"}`}>✰</button>
-                                            ))}
+                                        {
+                                            shopOrder.status == "delivered" && <div className="flex space-x-1 mt-2">
+                                                {/* {   [1,2,3,4,5].map((star)=>(
+                                                <button  className={`text-lg ${selectedRating[item.item._id]>=star?"text-yellow-500 outline-black":"text-white outline-black"}`} onClick={()=>handleRating(item.item._id,star)}>★</button>
+                                        //    <TiStar className={`text-lg ${selectedRating[item.item._id]>=star?"text-yellow-500 bg-amber-400":"text-white"}`}/>
+                                           ))} */}
+                                                {[1, 2, 3, 4, 5].map((star) => {
+                                                    const currentRating = Number(selectedRating[item.item._id] || 0);
+                                                    const isSelected = currentRating >= star;
+
+                                                    return (
+                                                        <button
+                                                            key={star}
+                                                            onClick={() => handleRating(item.item._id, star)}
+                                                            className="text-2xl cursor-pointer transition duration-200"
+                                                            style={{
+                                                                color: isSelected ? "#facc15" : "white", // yellow-400 when selected
+                                                                WebkitTextStroke: isSelected ? "0px" : "1px black"
+                                                            }}
+                                                        >
+                                                            ★
+                                                        </button>
+                                                    );
+                                                })}
+
+
                                             </div>
-                                    }
+                                        }
 
                                     </div>
 
@@ -75,7 +102,7 @@ function UserOrderCard({ data }) {
             }
             <div className="flex justify-between items-center boreder-t pt-2">
                 <p className="font-semibold">Total:₹{data.totalAmount}</p>
-                <button className="bg-[#ff4d2d] hover:bg-[#e64526] text-white px-4 py-2 rounded-lg text-sm" onClick={()=>navigate(`/track-order/${data._id}`)}>Track Order</button>
+                <button className="bg-[#ff4d2d] hover:bg-[#e64526] text-white px-4 py-2 rounded-lg text-sm" onClick={() => navigate(`/track-order/${data._id}`)}>Track Order</button>
             </div>
 
         </div>
