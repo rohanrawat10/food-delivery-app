@@ -1,7 +1,1 @@
-{
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "razorpay": "^2.9.6",
-    "recharts": "^3.7.0"
-  }
-}
+{}
