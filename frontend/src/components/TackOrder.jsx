@@ -6,10 +6,13 @@ import { MdCall } from "react-icons/md";
 import axios from "axios"
 import DeliveryBoyTracking from "./DeliveryBoyTracking";
 import { FaCheckCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 export default function TrackOrder() {
+    const {socket} = useSelector(state=>state.user)
     const navigate = useNavigate()
     const { orderId } = useParams()
     const [currentOrder, setCurrentOrder] = useState()
+    const [liveLocation,setLiveLocation] = useState({})
     const formatDate = (dateString) => {
         const date = new Date(dateString)
         return date.toLocaleDateString("en-GB", {
@@ -34,11 +37,26 @@ export default function TrackOrder() {
             console.error("handle get order async:", err)
         }
     }
+
+    useEffect(()=>{
+        if(!socket)return;
+      socket.on("updateDeliveryLocation",({
+         deliveryBoyId,
+         latitude,
+       longitude
+      })=>{
+setLiveLocation(prev=>({
+    ...prev,
+    [deliveryBoyId]:{lat:latitude,lon:longitude}
+}))
+      })
+    },[socket])
+
     useEffect(() => {
         // handleGetOrder()
         if (orderId) handleGetOrder(orderId)
     }, [orderId])
-    console.log(currentOrder?.shopOrders?.[0]?.assignedDeliveryBoy?.mobile)
+    // console.log(currentOrder?.shopOrders?.[0]?.assignedDeliveryBoy?.mobile)
     return (
 
         <div className=" p-4 flex flex-col gap-6">
@@ -96,7 +114,7 @@ export default function TrackOrder() {
                 <div className="h-[400px] w-full  rounded-2xl overflow-hidd">
                     <DeliveryBoyTracking data={
                         {
-                            deliveryBoyLocation: {
+                            deliveryBoyLocation: liveLocation[currentOrder?.shopOrders?.[0]?.assignedDeliveryBoy?._id]|| {
                                 lat: currentOrder.shopOrders?.[0]?.assignedDeliveryBoy.location.coordinates[1],
                                 lon: currentOrder.shopOrders?.[0]?.assignedDeliveryBoy.location.coordinates[0]
 

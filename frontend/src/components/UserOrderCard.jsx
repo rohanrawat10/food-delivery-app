@@ -1,7 +1,10 @@
+import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { serverUrl } from "../config"
 
 function UserOrderCard({ data }) {
      const navigate = useNavigate()
+     const [selectedRating,setSelectedRating] = useState({})//itemId:rating
     const formatDate = (dateString) => {
         const date = new Date(dateString)
         return date.toLocaleDateString("en-GB", {
@@ -9,6 +12,18 @@ function UserOrderCard({ data }) {
             month: "short",
             year: "numeric"
         })
+    }
+
+    const handleRating = async ()=>{
+        try{
+      const result = await axios.post(`${serverUrl}/api/item/rating`,{itemId,rating},{withCredentials:true})
+        setSelectedRating(prev=>({
+            ...prev,[itemId]:rating
+        }))
+    }
+        catch(err){
+         console.log("handle rating error:",err)
+        }
     }
     return (
         <div className="bg-white rounded-lg shadow p-4 space-y-4">
@@ -38,6 +53,14 @@ function UserOrderCard({ data }) {
                                         <img src={item.item.image} alt="" className="w-full h-24 object-cover rounded" />
                                         <p className="text-sm text-center font-semibold mt-1">{item.name}</p>
                                         <p className="text-sm text-center">₹{item.price}*{item.quantity}</p>
+                                    {
+                                        shopOrder.status =="delivered" && <div className="flex space-x-1 mt-2">
+                                         {   [1,2,3,4,5].map((star)=>(
+                                                <button className={`text-lg ${selectedRating[item.item._id]>=star?"text-yellow-500":"text-gray-400"}`}>✰</button>
+                                            ))}
+                                            </div>
+                                    }
+
                                     </div>
 
                                 ))

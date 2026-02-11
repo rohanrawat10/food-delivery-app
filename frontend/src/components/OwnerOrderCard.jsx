@@ -45,7 +45,7 @@ function OwnerOrderCard({ data }) {
             </div>
             <div className="flex items-start gap-2 text-gray-600 text-sm">
                
-                <p>{data?.deliveryAddress?.text =="online"}</p>
+                <p>{data?.deliveryAddress?.text }</p>
             </div>
             <div className="flex space-x-4 overflow-x-auto pb-2">
                 {

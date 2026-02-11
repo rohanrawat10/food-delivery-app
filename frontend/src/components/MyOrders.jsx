@@ -26,7 +26,7 @@ function MyOrders() {
         dispatch(setMyOrders([data, ...myOrders]))
       }
     })
-    socket.on('update-status', ({ orderId, shopId, status, userId })=> {
+    socket?.on('update-status', ({ orderId, shopId, status, userId })=> {
       if(userId == userData._id){
         dispatch(updateRealtimeOrderStatus({orderId,shopId,status}))
     }

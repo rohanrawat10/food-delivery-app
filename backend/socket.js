@@ -17,6 +17,67 @@ export const  socketHandler =  (io)=>{
             }
         })
 
+        // socket.on("updateLocation",async({latitude,longitude,userId})=>{
+           
+        //     try{
+        //   const user = await User.findByIdAndUpdate(userId,{
+        //       location:{
+        //     type:"Point",
+        //     coordinates:[longitude,latitude]
+        //   },
+        // isOnline:true,
+        // socketId:socket.id
+        
+        //     })
+        //     if(user){
+        //               io.emit('updateDeliveryLocation',{
+        //                 deliveryBoyId:userId,
+        //                 latitude,
+        //                 longitude
+        //               })
+
+        //     }
+        
+        // }
+        //     catch(err){
+        //         console.log("update location socket io error:",err)
+        //     }
+        // })
+    
+        socket.on("updateLocation", async (data = {}) => {
+  const { latitude, longitude, userId } = data;
+
+  if (!latitude || !longitude || !userId) {
+    console.log("Invalid updateLocation payload:", data);
+    return;
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        location: {
+          type: "Point",
+          coordinates: [longitude, latitude]
+        },
+        isOnline: true,
+        socketId: socket.id
+      },
+      { new: true }
+    );
+
+    if (user) {
+      io.emit("updateDeliveryLocation", {
+        deliveryBoyId: userId,
+        latitude,
+        longitude
+      });
+    }
+  } catch (err) {
+    console.log("update location socket io error:", err);
+  }
+})
+
         socket.on('disconnect',async()=>{
             try{
             await User.findOneAndUpdate({socket:socket.id},{

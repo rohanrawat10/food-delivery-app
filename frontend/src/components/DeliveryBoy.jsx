@@ -9,13 +9,41 @@ import { current } from "@reduxjs/toolkit"
  import { LuPackageCheck } from "react-icons/lu";
 import DeliveryBoyTracking from "./DeliveryBoyTracking"
 import { FaPhoneAlt } from "react-icons/fa";
+import { IoTimeOutline } from "react-icons/io5"
 export default function DeliveryBoy() {
-  const { userData, currentAddress } = useSelector(state => state.user)
+  const { userData, currentAddress,socket } = useSelector(state => state.user)
   const [availableAssignments,setAvailableAssignments] = useState([])   
   const [currentOrder,setCurrentOrder] = useState()
   const [showOtpInput,setShowOtpInput] = useState(false)
   const [otp,setOtp] = useState("");
   const [loading,setLoading] = useState(false)
+  const [deliveryBoyLocation,setDeliveryBoyLocation] = useState(null)
+  useEffect(()=>{
+if(!socket || userData.role !=="deliveryBoy")return;
+let watchId;
+ if(navigator.geolocation){
+  watchId = navigator.geolocation.watchPosition((position)=>{
+    const latitude = position.coords.latitude
+    const longitude = position.coords.longitude
+    setDeliveryBoyLocation({lat:latitude,lon:longitude})
+    socket.emit('updateLocation',{
+      latitude,
+      longitude,
+      userId:userData._id
+    })
+  }),
+  (error)=>{
+    console.log(error)
+  },{
+    enableHighAccuracy:true,
+   maximumAge:0,
+   timeout:5000
+  }
+ }
+ return ()=>{
+  if(watchId)navigator.geolocation.clearWatch(watchId)
+ }
+  },[socket,userData])
   const getAssignments = async()=>{
         // console.log("sending", lat, lon)
 
@@ -92,6 +120,17 @@ export default function DeliveryBoy() {
         // setShowOtpInput(true)
       }
       useEffect(()=>{
+         socket?.on("newAssignment",(data)=>{
+        if(data.sentTo == userData._id){
+           setAvailableAssignments(prev=>[...prev,data])
+        }
+      }
+        )
+        return()=>{
+          socket?.off('newAssignment')
+        }
+      },[socket])
+      useEffect(()=>{
         getAssignments()
         getCurrentOrder()
       },[userData])
@@ -149,7 +188,16 @@ export default function DeliveryBoy() {
                      <p className=" text-sm text-gray-600">{currentOrder.deliveryAddress.text}</p>
                      <p className="text-xs text-gray-500">Qty:{currentOrder.shopOrder.shopOrderItems.length} || ₹{currentOrder.shopOrder.subTotal}</p>
                   </div>
-                  <DeliveryBoyTracking data={currentOrder}/>
+                  <DeliveryBoyTracking data={{deliveryBoyLocation: deliveryBoyLocation||{
+                                lat: userData?.location?.coordinates[1],
+                                lon: userData?.location?.coordinates[0]
+
+                            },
+                            customerLocation: {
+                                lat: currentOrder?.deliveryAddress?.latitude,
+                                lon: currentOrder?.deliveryAddress?.longitude
+                            }
+                        }}/>
                   { !showOtpInput ? 
                   (
             <button className="mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 

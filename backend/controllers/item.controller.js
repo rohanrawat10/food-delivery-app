@@ -179,3 +179,31 @@ export const deleteItem = async(req,res)=>{
             res.status(500).json({message:"search items error:",err})
         }
       }
+
+
+      export const rating = async(req,res)=>{
+        try{
+       const {itemId,rating} = req.body
+       if(!itemId || !rating){
+        return res.status(400).json({message:"item id and rating are required"})
+       }
+       if(rating<1 || rating>5){
+        return res.status(400).json({message:"rating must be between 1-5"})
+       }
+       const item = await  item.findById(itemId)
+       if(!item){
+        return res.status(400).json({message:"item not found"})
+       }
+       const newCount = item.rating.count +1
+       const newAverage = (item.rating.average *item.rating.count + rating) / newCount
+       item.rating.count = newCount 
+       item.newAverage.average = newAverage
+       await item.save()
+
+       return res.status(200).json({rating:item.rating})
+
+        }
+        catch(err){
+            res.status(500).json({message:"rating error:",err})
+        }
+      }
