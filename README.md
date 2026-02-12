@@ -1,4 +1,5 @@
 # 🍽️ Food Ordering & Shop Management App (MERN)
+🚀 Live Demo:https://hungerstrike.onrender.com
 
 A full-stack **Food Ordering and Shop Management** application built using the **MERN stack**.  
 The platform supports **Users**, **Shop Owners**, and **Delivery Partners**, each with their own dashboard and role-based features.
