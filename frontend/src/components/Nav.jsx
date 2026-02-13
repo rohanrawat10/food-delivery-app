@@ -240,7 +240,7 @@ handleSearchItems()
                   <div className="text-lg font-semibold">
                     {userData?.fullName || "Profile"}
                   </div>
-                  <p className="text-[#ff4d2d]  cursor-pointer font-semibold" onClick={() => navigate("/my-orders")}>
+                  <p className="flex sm:hidden text-[#ff4d2d]  cursor-pointer font-semibold" onClick={() => navigate("/my-orders")}>
                     My-orders
                   </p>
                   <p className="text-[#ff4d2d] mt-2 cursor-pointer font-semibold" onClick={handleLogOut}>
