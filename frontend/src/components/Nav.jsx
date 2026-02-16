@@ -62,7 +62,7 @@ export default function Nav() {
       );
       dispatch(setSearchItems(result.data))
 
-      console.log("Search results:", result.data);
+      // console.log("Search results:", result.data);
     } catch (err) {
       console.error("handleSearchItems error:", err);
     }
