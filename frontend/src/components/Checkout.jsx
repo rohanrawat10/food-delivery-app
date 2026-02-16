@@ -37,7 +37,7 @@ function Checkout() {
   //      setSearchLocation(address)
   // },[address])
   const onDragend = (e) => {
-    console.log(e.target._latlng)
+    // console.log(e.target._latlng)
     const { lat, lng } = e.target._latlng;
     dispatch(setLocation({ lat: lat, lon: lng }))
     //  const map = useMap();
@@ -58,7 +58,7 @@ function Checkout() {
           },
         })
       dispatch(setAddress(result?.data?.results[0].address_line2))
-      console.log(result?.data?.results[0].address_line2)
+      // console.log(result?.data?.results[0].address_line2)
     }
     catch (err) {
       console.log("get address by lat lng", err)
@@ -82,7 +82,7 @@ function Checkout() {
       const result = await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(addressInput)}&apiKey=${apiKey}`)
       const { lat, lon } = result.data.features[0].properties
       dispatch(setLocation({ lat, lon }))
-      console.log(result)
+      // console.log(result)
     }
     catch (err) {
       console.log("get lat lng By address", err)
