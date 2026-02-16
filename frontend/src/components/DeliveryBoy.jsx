@@ -56,7 +56,7 @@ let watchId;
         try{
             const result = await axios.get(`${serverUrl}/api/order/get-assignments`,{withCredentials:true})
                  setAvailableAssignments(result.data)
-                  console.log("get Assignmenst console",result.data)
+                  // console.log("get Assignmenst console",result.data)
                    
         }
         catch(err){
@@ -69,7 +69,7 @@ let watchId;
            try{
            const result = await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`,{withCredentials:true})
            await getCurrentOrder()     
-           console.log(result.data)
+           // console.log(result.data)
            setLoading(false)
            setMessage(result.data.message)
           }
@@ -83,7 +83,7 @@ let watchId;
         try{
           const result  = await axios.get(`${serverUrl}/api/order/current-order`,{withCredentials:true})
          setCurrentOrder(result.data)
-          console.log("get current order",result.data)
+          // console.log("get current order",result.data)
         }
         catch(err){
           console.log("get current order error:",err)
@@ -98,7 +98,7 @@ let watchId;
       setShowOtpInput(true)
        setLoading(false)
            setMessage(result.data.message)
-          console.log("Get Delivery Otp",result.data)         
+          // console.log("Get Delivery Otp",result.data)         
     }
               catch(err){
             console.error("Get otp error:",err)
