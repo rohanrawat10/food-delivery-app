@@ -95,14 +95,8 @@ git clone https://github.com/rohanrawat10/food-delivery-app.git
 cd ../backend
 npm install
 ```
-### 3️⃣ Environment Variables (server/.env)
-```bash
-PORT=8000
-MONGODB_URL="mongodb+srv://rohanrawat792004_db_user:CylQWjePmav58Gvi@cluster0.ykdds0z.mongodb.net/hungerstrike"
-JWT_SECRET="HIIDSOSLNNPSPPSP"
 
-```
-### 4️⃣ Run the app
+### 3️⃣  Run the app
  ```bash
    # Backend
 npm run dev
