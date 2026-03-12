@@ -119,13 +119,6 @@ npm run dev
 - /api/item/add
 - /api/order/create
 
-## 📌 Future Enhancements
-- Online payment integration
-- Real-time order tracking
-- Push notifications
-- Admin analytics dashboard
-  
-
 ## 👤 Author
 ```bash
 **Rohan Rawat**  
