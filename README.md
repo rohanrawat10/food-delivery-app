@@ -122,7 +122,7 @@ npm run dev
 ## 👤 Author
 ```bash
 **Rohan Rawat**  
-MERN Developer • Learner  
+MERN Developer 
 GitHub: @rohanrawat10
 ```
 ## 🤝 Contributing
