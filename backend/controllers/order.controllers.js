@@ -334,7 +334,7 @@ await deliveryAssignment.populate("shop")
       o => o.shop.toString() === shopId
     );
 
-    // await order.populate("shopOrders.assignedDeliveryBoy", "fullName email mobile");
+ 
     await order.populate("shopOrders.shop", "name");
     await order.populate("shopOrders.assignedDeliveryBoy", "fullName email mobile");
     await order.populate("user", "socketId");
@@ -386,74 +386,16 @@ export const getDeliveryBoysAssignment = async (req, res) => {
       items: a.order.shopOrders.find(so => so._id.equals(a.shopOrderId)).shopOrderItems || [],
       subTotal: a.order.shopOrders.find(so => so._id.equals(a.shopOrderId)).subTotal
     }))
-    //      const formatted = assignments.map(a => {
-    //          if (!a.order || !a.shop) return null;
-    //   const shopOrder = a.order.shopOrders.find(
-    //     so => so._id.toString() === a.shopOrderId.toString()
-    //   )
+  
 
-    //   return {
-    //     assignmentId: a._id,
-    //     orderId: a.order._id,
-    //     shopName: a.shop.name,
-    //     deliveryAddress: a.order.deliveryAddress,
-    //     items: shopOrder?.shopOrderItems || [],
-    //     subTotal: shopOrder?.subTotal || 0
-    //   }
-    // })
+   
     return res.status(200).json(formatted)
   }
   catch (err) {
     return res.status(500).json({ message: `get assignment error ${err}` })
-    //         console.log("get assignment error message:", err.message);
-    //   console.log("get assignment error response:", err.response);
-    //   console.log("get assignment error status:", err.response?.status);
-    //   console.log("get assignment error data:", err.response?.data);
+ 
   }
 }
-
-
-// export const getDeliveryBoysAssignment = async (req, res) => {
-//   try {
-//     const deliveryBoyId = new mongoose.Types.ObjectId(req.userId);
-
-//     const assignments = await DeliveryAssignment.find({
-//       status: "broadcasted",
-//       assignedTo: null,
-//       broadcastedTo: { $in: [deliveryBoyId] }
-//     })
-//       .populate("order")
-//       .populate("shop");
-
-//     const formatted = assignments
-//       .map(a => {
-//         if (!a.order || !a.shop) return null;
-
-//         const shopOrder = a.order.shopOrders?.find(
-//           so => so._id.equals(a.shopOrderId)
-//         );
-
-//         if (!shopOrder) return null;
-
-//         return {
-//           assignmentId: a._id,
-//           orderId: a.order._id,
-//           shopName: a.shop.name,
-//           deliveryAddress: a.order.deliveryAddress,
-//           items: shopOrder.shopOrderItems,
-//           subTotal: shopOrder.subTotal
-//         };
-//       })
-//       .filter(Boolean);
-
-//     return res.status(200).json(formatted);
-//   } catch (err) {
-//     console.error("Delivery assignment error:", err);
-//     return res.status(500).json({ message: err.message });
-//   }
-// };
-
-
 
 export const acceptOrders = async (req, res) => {
   try {
@@ -484,7 +426,6 @@ export const acceptOrders = async (req, res) => {
     shopOrder.assignedDeliveryBoy = req.userId
     await order.save()
 
-    // await order.populate("shopOrders.assignedDeliveryBoy")
     return res.status(200).json({ message: "order accepted" })
   }
   catch (err) {
@@ -521,10 +462,7 @@ export const getCurrentOrder = async (req, res) => {
       deliveryBoyLocation.lon = assignment.assignedTo.location.coordinates[0]
     }
     let customerLocation = { lat: null, lon: null }
-    // if(assignment.order.deliveryAddress.length == 2){
-    //  customerLocation.lat = assignment.order.deliveryAddress.latitude
-    // customerLocation.lon = assignment.order.deliveryAddress.longitude
-    // }
+ 
 
     if (
       assignment.order.deliveryAddress?.latitude &&
@@ -614,13 +552,9 @@ export const sendDeliveryOtp = async (req, res) => {
 // 
 export const verifyDeliveryOtp = async (req, res) => {
   try {
-    // console.log("verifyDeliveryOtp request body:", req.body);
 
     const { orderId, shopOrderId, otp } = req.body
-    // console.log("orderId:", orderId, "shopOrderId:", shopOrderId, "otp:", otp);
 
-    // console.error("verifyDeliveryOtp request body:", req.body);
-    //     console.error("Using orderId:", orderId, "shopOrderId:", shopOrderId, "otp:", otp);
     const order = await Order.findById(orderId).populate("user")
     const shopOrder = order.shopOrders.id(shopOrderId)
     if (!order || !shopOrder) {
